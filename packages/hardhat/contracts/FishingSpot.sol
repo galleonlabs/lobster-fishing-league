@@ -11,6 +11,7 @@ contract FishingSpot is Ownable {
 	ILobsterToken public lobsterToken;
 	uint256 public lobsterAmount;
 	uint256 public endDate;
+	mapping(address => uint256) public lastFishingTime;
 
 	constructor(
 		address _equipmentNFT,
@@ -33,7 +34,12 @@ contract FishingSpot is Ownable {
 			equipmentNFT.balanceOf(msg.sender) > 0,
 			"You need a Lobster Pot NFT to fish"
 		);
+		require(
+			block.timestamp >= lastFishingTime[msg.sender] + 1 minutes,
+			"Please wait for at least 1 minute before fishing again"
+		);
 
 		lobsterToken.transfer(msg.sender, lobsterAmount);
+		lastFishingTime[msg.sender] = block.timestamp;
 	}
 }
