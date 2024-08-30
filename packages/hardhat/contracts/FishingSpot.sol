@@ -13,6 +13,15 @@ contract FishingSpot is Ownable {
 	uint256 public endDate;
 	mapping(address => uint256) public lastFishingTime;
 
+	event FishingSpotCreated(
+		address indexed equipmentNFT,
+		address indexed lobsterToken,
+		uint256 lobsterAmount,
+		uint256 endDate
+	);
+	event SuccessfulFishing(address indexed fisher, uint256 amount);
+	event AreaBaited(uint256 amount);
+
 	constructor(
 		address _equipmentNFT,
 		address _lobsterToken,
@@ -23,6 +32,14 @@ contract FishingSpot is Ownable {
 		lobsterToken = ILobsterToken(_lobsterToken);
 		lobsterAmount = _lobsterAmount;
 		endDate = _endDate;
+		lobsterToken.approve(address(this), type(uint256).max);
+
+		emit FishingSpotCreated(
+			_equipmentNFT,
+			_lobsterToken,
+			_lobsterAmount,
+			_endDate
+		);
 	}
 
 	function fish() public {
@@ -30,16 +47,30 @@ contract FishingSpot is Ownable {
 			block.timestamp < endDate,
 			"The lobster have migrated away from this spot"
 		);
+
 		require(
 			equipmentNFT.balanceOf(msg.sender) > 0,
 			"You need a Lobster Pot NFT to fish"
 		);
+
 		require(
 			block.timestamp >= lastFishingTime[msg.sender] + 1 minutes,
 			"Please wait for at least 1 minute before fishing again"
 		);
 
-		lobsterToken.transfer(msg.sender, lobsterAmount);
+		require(
+			lobsterToken.balanceOf(address(this)) >= lobsterAmount,
+			"Not enough lobster in the pool"
+		);
+
+		lobsterToken.transferFrom(address(this), msg.sender, lobsterAmount);
 		lastFishingTime[msg.sender] = block.timestamp;
+
+		emit SuccessfulFishing(msg.sender, lobsterAmount);
+	}
+
+	function baitArea(uint256 _amount) external onlyOwner {
+		lobsterToken.mintLobstersToPool(_amount);
+		emit AreaBaited(_amount);
 	}
 }
