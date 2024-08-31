@@ -1,9 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { LobsterPotNFT } from "../typechain-types";
-
-const DEV_ADDRESS = "0x30B0D5758c79645Eb925825E1Ee8A2c448812F37";
-const IMAGE_URL = "https://oldschool.runescape.wiki/images/thumb/Lobster_pot_detail.png/640px-Lobster_pot_detail.png";
+import { CommonRedLobsterToken, FishingSpot, LobsterPotNFT } from "../typechain-types";
+import { parseEther } from "viem";
 
 /**
  * Deploys a contract named "YourContract" using the deployer account and
@@ -11,7 +9,7 @@ const IMAGE_URL = "https://oldschool.runescape.wiki/images/thumb/Lobster_pot_det
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployLobsterPotNFT: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployFishingSpot: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   /*
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
@@ -25,10 +23,13 @@ const deployLobsterPotNFT: DeployFunction = async function (hre: HardhatRuntimeE
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("LobsterPotNFT", {
+  const lobsterToken = await hre.ethers.getContract<CommonRedLobsterToken>("CommonRedLobsterToken", deployer);
+  const lobsterPot = await hre.ethers.getContract<LobsterPotNFT>("LobsterPotNFT", deployer);
+
+  await deploy("FishingSpot", {
     from: deployer,
     // Contract constructor arguments
-    args: [DEV_ADDRESS, IMAGE_URL],
+    args: [await lobsterPot.getAddress(), await lobsterToken.getAddress(), parseEther("1")],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
@@ -36,20 +37,24 @@ const deployLobsterPotNFT: DeployFunction = async function (hre: HardhatRuntimeE
   });
 
   // Get the deployed contract to interact with it after deploying.
-  const contract = await hre.ethers.getContract<LobsterPotNFT>("LobsterPotNFT", deployer);
+  const contract = await hre.ethers.getContract<FishingSpot>("FishingSpot", deployer);
+  const whiteListPoolTx = await lobsterToken.whitelistPool(await contract.getAddress());
+  await whiteListPoolTx.wait();
+  const baitAreaTx = await contract.baitArea(parseEther("1000"));
+  await baitAreaTx.wait();
 
   if (hre.network.name !== "localhost") {
     await hre.run("verify:verify", {
       address: await contract.getAddress(),
-      constructorArguments: [DEV_ADDRESS, IMAGE_URL],
+      constructorArguments: [],
     });
   }
 
-  console.log("👋 Contract:", await contract.name());
+  console.log("👋 Contract:", await contract.getAddress());
 };
 
-export default deployLobsterPotNFT;
+export default deployFishingSpot;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployLobsterPotNFT.tags = ["LobsterPotNFT"];
+deployFishingSpot.tags = ["FishingSpot"];
