@@ -4,8 +4,9 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract LobsterPotNFT is ERC721, Ownable {
+contract LobsterPotNFT is ERC721, Ownable, ReentrancyGuard {
 	using Counters for Counters.Counter;
 
 	Counters.Counter private _tokenIds;
@@ -30,7 +31,7 @@ contract LobsterPotNFT is ERC721, Ownable {
 		imageURI = _imageURI;
 	}
 
-	function mintLobsterPot() public payable {
+	function mintLobsterPot() public payable nonReentrant {
 		require(msg.value == MINT_PRICE, "Incorrect ETH amount sent");
 
 		uint256 newTokenId = _tokenIds.current();
@@ -69,7 +70,7 @@ contract LobsterPotNFT is ERC721, Ownable {
 		return imageURI;
 	}
 
-	function withdrawFunds() public {
+	function withdrawFunds() public nonReentrant {
 		require(
 			msg.sender == developmentWallet,
 			"Only development wallet can withdraw funds"

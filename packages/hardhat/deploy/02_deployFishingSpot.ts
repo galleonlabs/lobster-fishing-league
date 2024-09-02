@@ -38,15 +38,18 @@ const deployFishingSpot: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   // Get the deployed contract to interact with it after deploying.
   const contract = await hre.ethers.getContract<FishingSpot>("FishingSpot", deployer);
-  const whiteListPoolTx = await lobsterToken.whitelistPool(await contract.getAddress());
-  await whiteListPoolTx.wait();
-  const baitAreaTx = await contract.baitArea(parseEther("1000"));
-  await baitAreaTx.wait();
+  const isWhitelisted = await lobsterToken.isPoolWhitelisted(await contract.getAddress());
+  if (!isWhitelisted) {
+    const whiteListPoolTx = await lobsterToken.whitelistPool(await contract.getAddress());
+    await whiteListPoolTx.wait();
+    const baitAreaTx = await contract.baitArea(parseEther("1000"));
+    await baitAreaTx.wait();
+  }
 
   if (hre.network.name !== "localhost") {
     await hre.run("verify:verify", {
       address: await contract.getAddress(),
-      constructorArguments: [],
+      constructorArguments: [await lobsterPot.getAddress(), await lobsterToken.getAddress(), parseEther("1")],
     });
   }
 

@@ -3,8 +3,9 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract CommonRedLobsterToken is ERC20, Ownable {
+contract CommonRedLobsterToken is ERC20, Ownable, ReentrancyGuard {
 	mapping(address => bool) private _whitelistedPools;
 
 	event PoolWhitelisted(address indexed pool);
@@ -26,7 +27,7 @@ contract CommonRedLobsterToken is ERC20, Ownable {
 		emit PoolUnwhitelisted(_pool);
 	}
 
-	function mintLobstersToPool(uint256 _amount) public {
+	function mintLobstersToPool(uint256 _amount) public nonReentrant {
 		require(
 			_whitelistedPools[msg.sender],
 			"Sender is not a whitelisted pool"

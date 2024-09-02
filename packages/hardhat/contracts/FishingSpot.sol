@@ -4,9 +4,10 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./ILobsterToken.sol";
 
-contract FishingSpot is Ownable {
+contract FishingSpot is Ownable, ReentrancyGuard {
 	IERC721 public equipmentNFT;
 	ILobsterToken public lobsterToken;
 	uint256 public lobsterAmount;
@@ -34,7 +35,7 @@ contract FishingSpot is Ownable {
 		emit FishingSpotCreated(_equipmentNFT, _lobsterToken, _lobsterAmount);
 	}
 
-	function fish() public {
+	function fish() public nonReentrant {
 		require(
 			equipmentNFT.balanceOf(msg.sender) > 0,
 			"You need a Lobster Pot NFT to fish"
@@ -55,7 +56,7 @@ contract FishingSpot is Ownable {
 
 		emit SuccessfulFishing(msg.sender, lobsterAmount);
 	}
-	
+
 	function baitArea(uint256 _amount) external onlyOwner {
 		lobsterToken.mintLobstersToPool(_amount);
 		emit AreaBaited(_amount);
