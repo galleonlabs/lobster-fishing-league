@@ -1,86 +1,75 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
+/// @title LobsterPot NFT Contract
+/// @notice This contract manages the minting and metadata of LobsterPot NFTs
 contract LobsterPotNFT is ERC721, Ownable, ReentrancyGuard {
-	using Counters for Counters.Counter;
+    uint256 private _nextTokenId;
+    uint256 public constant MINT_PRICE = 0.001 ether;
+    address public developmentWallet;
+    string public imageURI;
 
-	Counters.Counter private _tokenIds;
-	uint256 public constant MINT_PRICE = 0.001 ether;
-	address public developmentWallet;
-	string public imageURI;
+    event DevelopmentWalletUpdated(
+        address indexed oldWallet,
+        address indexed newWallet
+    );
+    event ImageURIUpdated(string oldURI, string newURI);
 
-	event LobsterPotMinted(address indexed to, uint256 indexed tokenId);
-	event DevelopmentWalletUpdated(
-		address indexed oldWallet,
-		address indexed newWallet
-	);
-	event ImageURIUpdated(string oldURI, string newURI);
-	event FundsWithdrawn(address indexed to, uint256 amount);
+    /// @notice Initializes the LobsterPot NFT contract
+    /// @param _developmentWallet Address of the wallet to receive mint proceeds
+    /// @param _imageURI URI for the NFT image
+    constructor(
+        address _developmentWallet,
+        string memory _imageURI
+    ) ERC721("LobsterPot", "LPOT") Ownable(msg.sender) {
+        require(_developmentWallet != address(0), "Invalid development wallet");
+        developmentWallet = _developmentWallet;
+        imageURI = _imageURI;
+    }
 
-	constructor(
-		address _developmentWallet,
-		string memory _imageURI
-	) ERC721("LobsterPot", "LPOT") {
-		require(_developmentWallet != address(0), "Invalid development wallet");
-		developmentWallet = _developmentWallet;
-		imageURI = _imageURI;
-	}
+    /// @notice Mints a new LobsterPot NFT
+    /// @dev Requires payment of MINT_PRICE
+    function mintLobsterPot() public payable nonReentrant {
+        require(msg.value == MINT_PRICE, "Incorrect ETH amount sent");
+        uint256 tokenId = _nextTokenId++;
+        _safeMint(msg.sender, tokenId);
+    }
 
-	function mintLobsterPot() public payable nonReentrant {
-		require(msg.value == MINT_PRICE, "Incorrect ETH amount sent");
+    /// @notice Updates the development wallet address
+    /// @param newDevelopmentWallet New address for the development wallet
+    function setDevelopmentWallet(
+        address newDevelopmentWallet
+    ) public onlyOwner {
+        require(
+            newDevelopmentWallet != address(0),
+            "Invalid development wallet"
+        );
+        address oldWallet = developmentWallet;
+        developmentWallet = newDevelopmentWallet;
+        emit DevelopmentWalletUpdated(oldWallet, newDevelopmentWallet);
+    }
 
-		uint256 newTokenId = _tokenIds.current();
-		_tokenIds.increment();
+    /// @notice Updates the image URI for all NFTs
+    /// @param newImageURI New URI for the NFT image
+    function setImageURI(string memory newImageURI) public onlyOwner {
+        string memory oldURI = imageURI;
+        imageURI = newImageURI;
+        emit ImageURIUpdated(oldURI, newImageURI);
+    }
 
-		_safeMint(msg.sender, newTokenId);
-
-		emit LobsterPotMinted(msg.sender, newTokenId);
-	}
-
-	function setDevelopmentWallet(
-		address _newDevelopmentWallet
-	) public onlyOwner {
-		require(
-			_newDevelopmentWallet != address(0),
-			"Invalid development wallet"
-		);
-		address oldWallet = developmentWallet;
-		developmentWallet = _newDevelopmentWallet;
-		emit DevelopmentWalletUpdated(oldWallet, _newDevelopmentWallet);
-	}
-
-	function setImageURI(string memory _newImageURI) public onlyOwner {
-		string memory oldURI = imageURI;
-		imageURI = _newImageURI;
-		emit ImageURIUpdated(oldURI, _newImageURI);
-	}
-
-	function tokenURI(
-		uint256 tokenId
-	) public view virtual override returns (string memory) {
-		require(
-			_exists(tokenId),
-			"ERC721Metadata: URI query for nonexistent token"
-		);
-		return imageURI;
-	}
-
-	function withdrawFunds() public nonReentrant {
-		require(
-			msg.sender == developmentWallet,
-			"Only development wallet can withdraw funds"
-		);
-		uint256 balance = address(this).balance;
-		require(balance > 0, "No funds to withdraw");
-		(bool success, ) = payable(developmentWallet).call{ value: balance }(
-			""
-		);
-		require(success, "Withdrawal failed");
-		emit FundsWithdrawn(developmentWallet, balance);
-	}
+    /// @notice Withdraws the contract's balance to the development wallet
+    function withdrawFunds() public nonReentrant {
+        require(
+            msg.sender == developmentWallet,
+            "Only development wallet can withdraw funds"
+        );
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+        (bool success, ) = payable(developmentWallet).call{value: balance}("");
+        require(success, "Withdrawal failed");
+    }
 }

@@ -1,67 +1,144 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
-import { CommonRedLobsterToken } from "../typechain-types";
-import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { getAddress, parseEther } from "viem";
+import hre from "hardhat";
 
 describe("CommonRedLobsterToken", function () {
-  let commonRedLobsterToken: CommonRedLobsterToken;
-  let owner: HardhatEthersSigner;
-  let addr1: HardhatEthersSigner;
-  let addr2: HardhatEthersSigner;
+  async function deployCommonRedLobsterTokenFixture() {
+    const [owner, user, pool1, pool2] = await hre.viem.getWalletClients();
 
-  before(async () => {
-    [owner, addr1, addr2] = await ethers.getSigners();
-    const tokenFactory = await ethers.getContractFactory("CommonRedLobsterToken");
-    commonRedLobsterToken = (await tokenFactory.deploy()) as CommonRedLobsterToken;
-    await commonRedLobsterToken.waitForDeployment();
-  });
+    const commonRedLobsterToken = await hre.viem.deployContract("CommonRedLobsterToken");
+
+    return { commonRedLobsterToken, owner, user, pool1, pool2 };
+  }
 
   describe("Deployment", function () {
-    it("Should set the right owner", async function () {
-      expect(await commonRedLobsterToken.owner()).to.equal(owner.address);
+    it("Should set the correct name and symbol", async function () {
+      const { commonRedLobsterToken } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      expect(await commonRedLobsterToken.read.name()).to.equal("CommonRedLobster");
+      expect(await commonRedLobsterToken.read.symbol()).to.equal("CRL");
+    });
+
+    it("Should set the deployer as the owner", async function () {
+      const { commonRedLobsterToken, owner } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      expect(await commonRedLobsterToken.read.owner()).to.equal(getAddress(owner.account.address));
     });
   });
 
-  describe("Whitelisting Pools", function () {
+  describe("whitelistPool", function () {
     it("Should whitelist a pool", async function () {
-      await commonRedLobsterToken.whitelistPool(addr1.address);
-      expect(await commonRedLobsterToken.isPoolWhitelisted(addr1.address)).to.be.true;
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await expect(
+        commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address })
+      )
+        .to.emit(commonRedLobsterToken, "PoolWhitelisted")
+        .withArgs(getAddress(pool1.account.address));
+
+      expect(await commonRedLobsterToken.read.isPoolWhitelisted([pool1.account.address])).to.be.true;
     });
 
-    it("Should unwhitelist a pool", async function () {
-      const alreadyWhitelisted = await commonRedLobsterToken.isPoolWhitelisted(addr1.address);
-      if (!alreadyWhitelisted) await commonRedLobsterToken.whitelistPool(addr1.address);
-      await commonRedLobsterToken.unwhitelistPool(addr1.address);
-      expect(await commonRedLobsterToken.isPoolWhitelisted(addr1.address)).to.be.false;
+    it("Should revert if called by non-owner", async function () {
+      const { commonRedLobsterToken, user, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await expect(
+        commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: user.account.address })
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
-    it("Should not whitelist an already whitelisted pool", async function () {
-      const alreadyWhitelisted = await commonRedLobsterToken.isPoolWhitelisted(addr1.address);
-      if (!alreadyWhitelisted) await commonRedLobsterToken.whitelistPool(addr1.address);
-      await expect(commonRedLobsterToken.whitelistPool(addr1.address)).to.be.revertedWith("Pool already whitelisted");
+    it("Should revert if pool is already whitelisted", async function () {
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      await expect(
+        commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address })
+      ).to.be.revertedWith("Pool already whitelisted");
     });
   });
 
-  describe("Minting Lobsters", function () {
+  describe("unwhitelistPool", function () {
+    it("Should unwhitelist a pool", async function () {
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      await expect(
+        commonRedLobsterToken.write.unwhitelistPool([pool1.account.address], { account: owner.account.address })
+      )
+        .to.emit(commonRedLobsterToken, "PoolUnwhitelisted")
+        .withArgs(getAddress(pool1.account.address));
+
+      expect(await commonRedLobsterToken.read.isPoolWhitelisted([pool1.account.address])).to.be.false;
+    });
+
+    it("Should revert if called by non-owner", async function () {
+      const { commonRedLobsterToken, owner, user, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      await expect(
+        commonRedLobsterToken.write.unwhitelistPool([pool1.account.address], { account: user.account.address })
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("Should revert if pool is not whitelisted", async function () {
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await expect(
+        commonRedLobsterToken.write.unwhitelistPool([pool1.account.address], { account: owner.account.address })
+      ).to.be.revertedWith("Pool is not whitelisted");
+    });
+  });
+
+  describe("mintLobstersToPool", function () {
     it("Should mint lobsters to a whitelisted pool", async function () {
-      const alreadyWhitelisted = await commonRedLobsterToken.isPoolWhitelisted(addr1.address);
-      if (!alreadyWhitelisted) await commonRedLobsterToken.whitelistPool(addr1.address);
-      await commonRedLobsterToken.connect(addr1).mintLobstersToPool(100);
-      expect(await commonRedLobsterToken.balanceOf(addr1.address)).to.equal(100);
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      const amount = 1000n;
+      await expect(commonRedLobsterToken.write.mintLobstersToPool([amount], { account: pool1.account.address }))
+        .to.emit(commonRedLobsterToken, "LobstersMinted")
+        .withArgs(getAddress(pool1.account.address), amount);
+
+      expect(await commonRedLobsterToken.read.balanceOf([pool1.account.address])).to.equal(amount);
     });
 
-    it("Should not mint lobsters to a non-whitelisted pool", async function () {
-      await expect(commonRedLobsterToken.connect(addr2).mintLobstersToPool(100)).to.be.revertedWith(
-        "Sender is not a whitelisted pool",
-      );
+    it("Should revert if called by non-whitelisted address", async function () {
+      const { commonRedLobsterToken, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await expect(
+        commonRedLobsterToken.write.mintLobstersToPool([1000n], { account: pool1.account.address })
+      ).to.be.revertedWith("Sender is not a whitelisted pool");
     });
 
-    it("Should not mint lobsters with zero amount", async function () {
-      const alreadyWhitelisted = await commonRedLobsterToken.isPoolWhitelisted(addr1.address);
-      if (!alreadyWhitelisted) await commonRedLobsterToken.whitelistPool(addr1.address);
-      await expect(commonRedLobsterToken.connect(addr1).mintLobstersToPool(0)).to.be.revertedWith(
-        "Amount must be greater than zero",
-      );
+    it("Should revert if amount is zero", async function () {
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      await expect(
+        commonRedLobsterToken.write.mintLobstersToPool([0n], { account: pool1.account.address })
+      ).to.be.revertedWith("Amount must be greater than zero");
+    });
+  });
+
+  describe("isPoolWhitelisted", function () {
+    it("Should return true for whitelisted pools", async function () {
+      const { commonRedLobsterToken, owner, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      await commonRedLobsterToken.write.whitelistPool([pool1.account.address], { account: owner.account.address });
+
+      expect(await commonRedLobsterToken.read.isPoolWhitelisted([pool1.account.address])).to.be.true;
+    });
+
+    it("Should return false for non-whitelisted pools", async function () {
+      const { commonRedLobsterToken, pool1 } = await loadFixture(deployCommonRedLobsterTokenFixture);
+
+      expect(await commonRedLobsterToken.read.isPoolWhitelisted([pool1.account.address])).to.be.false;
     });
   });
 });

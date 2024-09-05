@@ -1,11 +1,24 @@
 {
   "name": "hardhat-project",
+  "version": "1.0.0",
+  "description": "An example Hardhat project",
+  "author": "Galleon Labs",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "lint": "hardhat lint",
+    "flatten": "hardhat flatten",
+    "chain": "hardhat node --network hardhat"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
     "hardhat": "^2.22.10"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
-    "@nomicfoundation/hardhat-verify": "^2.0.10"
+    "@nomicfoundation/hardhat-verify": "^2.0.10",
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5"
   }
 }

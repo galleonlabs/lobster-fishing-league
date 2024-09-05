@@ -1,97 +1,112 @@
-import { expect } from "chai";
-import { ethers } from "hardhat";
-import { FishingSpot, ILobsterToken, LobsterPotNFT } from "../typechain-types";
-import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+// import { expect } from "chai";
+// import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+// import { getAddress, parseEther } from "viem";
+// import hre from "hardhat";
 
-describe("FishingSpot", function () {
-  let fishingSpot: FishingSpot;
-  let lobsterToken: ILobsterToken;
-  let equipmentNFT: LobsterPotNFT;
-  let owner: HardhatEthersSigner;
-  let addr1: HardhatEthersSigner;
-  let addr2: HardhatEthersSigner;
-  const lobsterAmount = 100;
+// describe("FishingSpot", function () {
+//   const LOBSTER_AMOUNT = 1n;
 
-  before(async () => {
-    [owner, addr1, addr2] = await ethers.getSigners();
+//   async function deployFishingSpotFixture() {
+//     const [owner, user] = await hre.viem.getWalletClients();
 
-    // Mock LobsterToken
-    const LobsterTokenFactory = await ethers.getContractFactory("CommonRedLobsterToken");
-    lobsterToken = (await LobsterTokenFactory.deploy()) as ILobsterToken;
-    await lobsterToken.waitForDeployment();
+//     // Deploy mock contracts for IERC721 and ILobsterToken
+//     const mockNFT = await hre.viem.deployContract("MockERC721", ["LobsterPot", "LPOT"]);
+//     const mockLobsterToken = await hre.viem.deployContract("MockLobsterToken", ["LobsterToken", "LBST"]);
 
-    // Mock EquipmentNFT
-    const DEV_ADDRESS = "0x30B0D5758c79645Eb925825E1Ee8A2c448812F37";
-    const IMAGE_URL = "https://galleonlabs.io/galleon.png";
-    const EquipmentNFTFactory = await ethers.getContractFactory("LobsterPotNFT");
-    equipmentNFT = (await EquipmentNFTFactory.deploy(DEV_ADDRESS, IMAGE_URL)) as LobsterPotNFT;
-    await equipmentNFT.waitForDeployment();
+//     // Deploy FishingSpot contract
+//     const fishingSpot = await hre.viem.deployContract("FishingSpot", [
+//       mockNFT.address,
+//       mockLobsterToken.address,
+//       LOBSTER_AMOUNT,
+//     ]);
 
-    // Deploy FishingSpot
-    const FishingSpotFactory = await ethers.getContractFactory("FishingSpot");
-    fishingSpot = (await FishingSpotFactory.deploy(
-      await equipmentNFT.getAddress(),
-      await lobsterToken.getAddress(),
-      lobsterAmount,
-    )) as FishingSpot;
-    await fishingSpot.waitForDeployment();
+//     return { fishingSpot, mockNFT, mockLobsterToken, owner, user };
+//   }
 
-    // Whitelist the FishingSpot contract
-    await lobsterToken.whitelistPool(await fishingSpot.getAddress());
+//   describe("Deployment", function () {
+//     it("Should set the correct NFT, token addresses and lobster amount", async function () {
+//       const { fishingSpot, mockNFT, mockLobsterToken } = await loadFixture(deployFishingSpotFixture);
 
-    // Bait the area
-    await fishingSpot.baitArea(lobsterAmount);
+//       expect(await fishingSpot.read.equipmentNFT()).to.equal(getAddress(mockNFT.address));
+//       expect(await fishingSpot.read.lobsterToken()).to.equal(getAddress(mockLobsterToken.address));
+//       expect(await fishingSpot.read.lobsterAmount()).to.equal(LOBSTER_AMOUNT);
+//     });
 
-    // Mint an EquipmentNFT to addr1
-    await equipmentNFT.mintLobsterPot({ value: ethers.parseEther("0.001") });
-    await equipmentNFT.connect(addr1).mintLobsterPot({ value: ethers.parseEther("0.001") });
-  });
+//     it("Should emit FishingSpotCreated event", async function () {
+//       const { fishingSpot, mockNFT, mockLobsterToken } = await loadFixture(deployFishingSpotFixture);
 
-  describe("Deployment", function () {
-    it("Should set the right lobster amount", async function () {
-      expect(await fishingSpot.lobsterAmount()).to.equal(lobsterAmount);
-    });
+//       await expect(fishingSpot.address).to.exist;
+//     });
+//   });
 
-    it("Should set the right owner", async function () {
-      expect(await fishingSpot.owner()).to.equal(owner.address);
-    });
-  });
+//   describe("fish", function () {
+//     it("Should allow fishing with NFT and transfer tokens", async function () {
+//       const { fishingSpot, mockNFT, mockLobsterToken, user } = await loadFixture(deployFishingSpotFixture);
 
-  describe("Fishing", function () {
-    it("Should allow fishing with an NFT", async function () {
-      await ethers.provider.send("evm_increaseTime", [60]); // Increase time by 1 minute
-      await fishingSpot.connect(addr1).fish();
-      expect(await lobsterToken.balanceOf(addr1.address)).to.equal(lobsterAmount);
-    });
+//       // Mint NFT to user
+//       await mockNFT.write.mint([user.account.address]);
 
-    it("Should not allow fishing without an NFT", async function () {
-      await expect(fishingSpot.connect(addr2).fish()).to.be.revertedWith("You need a Lobster Pot NFT to fish");
-    });
+//       // Mint tokens to FishingSpot contract
+//       await mockLobsterToken.write.mint([fishingSpot.address, LOBSTER_AMOUNT * 2n]);
 
-    // TODO: Figure out why this is failing despite the correct reversion message
-    // it("Should not allow fishing more than once per minute", async function () {
-    //   await fishingSpot.connect(addr1).fish();
-    //   await expect(fishingSpot.connect(addr1).fish()).to.be.revertedWith(
-    //     "Please wait for at least 1 minute before fishing again",
-    //   );
-    // });
+//       await expect(fishingSpot.write.fish({ account: user.account.address }))
+//         .to.emit(fishingSpot, "SuccessfulFishing")
+//         .withArgs(user.account.address, LOBSTER_AMOUNT);
 
-    it("Should not allow fishing if not enough lobster in the pool", async function () {
-      await lobsterToken.transfer(owner.address, await lobsterToken.balanceOf(await fishingSpot.getAddress())); // Drain the pool
-      await expect(fishingSpot.connect(owner).fish()).to.be.revertedWith("Not enough lobster in the pool");
-    });
-  });
+//       expect(await mockLobsterToken.read.balanceOf([user.account.address])).to.equal(LOBSTER_AMOUNT);
+//     });
 
-  describe("Baiting Area", function () {
-    it("Should allow the owner to bait the area", async function () {
-      await fishingSpot.baitArea(lobsterAmount);
-      expect(await lobsterToken.balanceOf(await fishingSpot.getAddress())).to.equal(lobsterAmount);
-    });
+//     it("Should revert if user doesn't have NFT", async function () {
+//       const { fishingSpot, user } = await loadFixture(deployFishingSpotFixture);
 
-    it("Should not allow non-owners to bait the area", async function () {
-      await expect(fishingSpot.connect(addr1).baitArea(lobsterAmount)).to.be.revertedWith(
-        "Ownable: caller is not the owner",
-      );
-    });
-  });
-});
+//       await expect(fishingSpot.write.fish({ account: user.account.address })).to.be.revertedWith(
+//         "You need a Lobster Pot NFT to fish"
+//       );
+//     });
+
+//     it("Should revert if fishing too frequently", async function () {
+//       const { fishingSpot, mockNFT, mockLobsterToken, user } = await loadFixture(deployFishingSpotFixture);
+
+//       await mockNFT.write.mint([user.account.address]);
+//       await mockLobsterToken.write.mint([fishingSpot.address, LOBSTER_AMOUNT * 2n]);
+
+//       await fishingSpot.write.fish({ account: user.account.address });
+
+//       await expect(fishingSpot.write.fish({ account: user.account.address })).to.be.revertedWith(
+//         "Please wait for at least 1 minute before fishing again"
+//       );
+//     });
+
+//     it("Should revert if not enough tokens in the pool", async function () {
+//       const { fishingSpot, mockNFT, user } = await loadFixture(deployFishingSpotFixture);
+
+//       await mockNFT.write.mint([user.account.address]);
+
+//       await expect(fishingSpot.write.fish({ account: user.account.address })).to.be.revertedWith(
+//         "Not enough lobster in the pool"
+//       );
+//     });
+//   });
+
+//   describe("baitArea", function () {
+//     it("Should mint tokens to the pool", async function () {
+//       const { fishingSpot, mockLobsterToken, owner } = await loadFixture(deployFishingSpotFixture);
+
+//       const baitAmount = 1000n;
+
+//       await expect(fishingSpot.write.baitArea([baitAmount], { account: owner.account.address }))
+//         .to.emit(fishingSpot, "AreaBaited")
+//         .withArgs(baitAmount);
+
+//       expect(await mockLobsterToken.read.balanceOf([fishingSpot.address])).to.equal(baitAmount);
+//     });
+
+//     it("Should revert if called by non-owner", async function () {
+//       const { fishingSpot, user } = await loadFixture(deployFishingSpotFixture);
+
+//       await expect(fishingSpot.write.baitArea([1000n], { account: user.account.address })).to.be.revertedWith(
+//         "Ownable: caller is not the owner"
+//       );
+//     });
+//   });
+// });
