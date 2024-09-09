@@ -87,7 +87,15 @@ export default function Page() {
               <li>Quality: Common Lobsters</li>
             </ul>
             <p>Click below to mint your Lobster Pot.</p>
-            <div className="w-48 pt-2">{address ? <MintEquipment /> : <p>Please connect your wallet to mint</p>}</div>
+            <div>
+              {address ? (
+                <div className="w-48 pt-2">
+                  <MintEquipment />
+                </div>
+              ) : (
+                <p className="italic font-semibold">Please connect your wallet to mint</p>
+              )}
+            </div>
           </div>
         ) : (
           <div className="mt-6 pl-1">
@@ -122,7 +130,7 @@ export default function Page() {
               )}
             </div>
           ) : (
-            <p>Please connect your wallet to fish</p>
+            <p className="italic font-semibold">Please connect your wallet to fish</p>
           )}
         </div>
       </section>

@@ -1,11 +1,23 @@
-import React from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import React, { useEffect } from "react";
+import { BASE_MAINNET_CHAIN_ID, BASE_SEPOLIA_CHAIN_ID } from "src/constants";
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
 
 export default function WalletConnect() {
   const { address, isConnected } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+
+  useEffect(() => {
+    if (isConnected) {
+      if (process.env.NODE_ENV === "development") {
+        switchChain({ chainId: BASE_SEPOLIA_CHAIN_ID });
+      } else {
+        switchChain({ chainId: BASE_MAINNET_CHAIN_ID });
+      }
+    }
+  }, [isConnected, address]);
 
   if (isConnected) {
     return (

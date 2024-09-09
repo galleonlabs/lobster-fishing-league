@@ -15,18 +15,20 @@
     "deploy-fishing-spot": "hardhat run scripts/deploy-fishing-spot.ts --network base",
     "verify-lobster-token": "hardhat run scripts/verify-common-red-lobster-token.ts --network base",
     "verify-lobster-pot": "hardhat run scripts/verify-lobster-pot.ts --network base",
-    "verify-fishing-spot": "hardhat run scripts/verify-fishing-spot.ts --network base"
+    "verify-fishing-spot": "hardhat run scripts/verify-fishing-spot.ts --network base",
+    "deploy-env": "npx hardhat run scripts/deploy-env.ts --network base",
+    "verify-env": "npx hardhat run scripts/verify-env.ts --network base"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.10",
     "@nomicfoundation/hardhat-viem": "^2.0.4",
     "hardhat": "^2.22.10",
     "viem": "^2.21.3"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
-    "@nomicfoundation/hardhat-verify": "^2.0.10",
     "@openzeppelin/contracts": "^5.0.2",
     "dotenv": "^16.4.5"
   }

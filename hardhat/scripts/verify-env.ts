@@ -1,13 +1,14 @@
 import hre from "hardhat";
 
 async function main() {
-  const commonRedLobsterTokenAddress = "0x58108c89530f1de255421b35b2079b4277d13ce9"; // Replace with actual address
-  const lobsterPotNFTAddress = "0x1c1b9c0adace0d01807b54652ed379f7e1cc133c"; // Replace with actual address
-  const fishingSpotAddress = "0xa28605a467afe56d63d306067dcd699d02cdf2c0"; // Replace with actual address
+  const commonRedLobsterTokenAddress = "0x4e393232c1bad4297cf98da7cc17bc094ab01755"; // Replace with actual address
+  const lobsterPotNFTAddress = "0x7a8eac96611fc2220ec2f2ded9c0772b5987c7d4"; // Replace with actual address
+  const fishingSpotAddress = "0x73746cd30f31fc629d0ab23d0008c5accd89ed80"; // Replace with actual address
 
   console.log("Verifying CommonRedLobsterToken...");
   await hre.run("verify:verify", {
     address: commonRedLobsterTokenAddress,
+    contract: "contracts/CommonRedLobsterToken.sol:CommonRedLobsterToken",
     constructorArguments: [],
   });
 
@@ -16,7 +17,7 @@ async function main() {
     address: lobsterPotNFTAddress,
     constructorArguments: [
       "0x30B0D5758c79645Eb925825E1Ee8A2c448812F37", // Replace with the development wallet address
-      "https://example.com/lobster.png", // Replace with the actual image URI
+      "https://lobsterfishingleague.com/lobster.png", // Replace with the actual image URI
     ],
   });
 
