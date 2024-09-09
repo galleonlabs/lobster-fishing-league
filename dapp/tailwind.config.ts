@@ -4,6 +4,9 @@ const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      animation: {
+        "bounce-slow": "bounce 3s infinite",
+      },
       fontFamily: {
         sans: ["scape", "Inter", ...defaultTheme.fontFamily.sans],
       },

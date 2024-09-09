@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useAccount, useChainId, useReadContract } from "wagmi";
 import {
@@ -79,7 +80,6 @@ export default function Page() {
   }, [updateCooldown]);
 
   useEffect(() => {
-    // Set up an interval to refetch data periodically
     const interval = setInterval(() => {
       refetchLobsterPotBalance();
       refetchCrlBalance();
@@ -101,21 +101,23 @@ export default function Page() {
   }, [refetchLastFishingTime, refetchCrlBalance]);
 
   return (
-    <div className="min-h-screen bg-primary-light px-24 text-text-default">
+    <div className="min-h-screen bg-primary-light text-text-default flex flex-col">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Hero />
-        <BalanceDisplay lobsterPotBalance={lobsterPotBalance ?? BigInt(0)} crlBalance={crlBalance ?? BigInt(0)} />
-        <MintEquipment address={address} lobsterPotBalance={lobsterPotBalance} onSuccess={handleMintSuccess} />
-        <GoFishing
-          address={address}
-          lobsterPotBalance={lobsterPotBalance}
-          canFish={canFish}
-          remainingCooldown={remainingCooldown}
-          onSuccess={handleFishSuccess}
-        />
-        <ContractsGuide contractAddresses={contractAddresses} />
-        <ComingSoon />
+        <div className="space-y-8">
+          <BalanceDisplay lobsterPotBalance={lobsterPotBalance ?? BigInt(0)} crlBalance={crlBalance ?? BigInt(0)} />
+          <MintEquipment address={address} lobsterPotBalance={lobsterPotBalance} onSuccess={handleMintSuccess} />
+          <GoFishing
+            address={address}
+            lobsterPotBalance={lobsterPotBalance}
+            canFish={canFish}
+            remainingCooldown={remainingCooldown}
+            onSuccess={handleFishSuccess}
+          />
+          <ContractsGuide contractAddresses={contractAddresses} />
+          <ComingSoon />
+        </div>
       </main>
       <Footer />
     </div>
