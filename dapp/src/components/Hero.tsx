@@ -10,8 +10,7 @@ export default function Hero() {
         </div>
         <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-text">Lobster Fishing League</h2>
         <p className="text-lg sm:text-lg text-text-light max-w-2xl mx-auto">
-          Take some time out of your busy schedule and catch some onchain lobsters with friends. Join the ultimate
-          blockchain fishing experience.
+          Take some time out of your busy schedule and catch some onchain lobsters with friends. Relax & enjoy.
         </p>
         {/* <div className="mt-8">
           <a
