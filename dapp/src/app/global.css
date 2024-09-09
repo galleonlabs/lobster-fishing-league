@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 html {
-  font-family: monospace, sans-serif !important;
+  font-family: 'Inter var', sans-serif !important;
 }
 
 :root {

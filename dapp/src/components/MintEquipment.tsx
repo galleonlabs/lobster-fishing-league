@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import React from "react";
+import { useChainId, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
 import { parseEther } from "viem";
 import { getContractAddresses, lobsterPotNFTABI, isSupportedNetwork } from "../constants";
 
 type MintEquipmentProps = {
+  address: `0x${string}` | undefined;
+  lobsterPotBalance: bigint | undefined;
   onSuccess: () => void;
 };
 
-export default function MintEquipment({ onSuccess }: MintEquipmentProps) {
-  const { address } = useAccount();
+export default function MintEquipment({ address, lobsterPotBalance, onSuccess }: MintEquipmentProps) {
   const chainId = useChainId();
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   if (!chainId || !isSupportedNetwork(chainId)) {
     return <div>Unsupported network. Please connect to Base Mainnet or Base Sepolia.</div>;
@@ -49,41 +50,44 @@ export default function MintEquipment({ onSuccess }: MintEquipmentProps) {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isConfirmed) {
       setIsSuccess(true);
       onSuccess();
     }
   }, [isConfirmed, onSuccess]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (error) {
       console.error("Contract write error:", error);
       setErrorMessage(error instanceof Error ? error.message : "An unknown error occurred");
     }
   }, [error]);
 
-  if (!address) {
-    return <div>Please connect your wallet to mint</div>;
-  }
-
   return (
-    <div>
-      <button
-        onClick={handleMint}
-        disabled={isPending || isConfirming || !mintPrice}
-        className="bg-black text-white rounded-md px-4 py-2 hover:bg-opacity-80 disabled:bg-gray-400"
-      >
-        {isPending || isConfirming
-          ? "Minting..."
-          : `Mint Lobster Pot`}
-      </button>
-      {errorMessage && <p className="text-red-500 mt-2">Error: {errorMessage}</p>}
-      {isSuccess && <p className="text-green-500 mt-2">Minting successful!</p>}
-      <div className="mt-2 text-xs italic pl-1">
-        <p>Contract Address: {contractAddresses.lobsterPotNFT}</p>
-
-      </div>
-    </div>
+    <section className="bg-white rounded-lg shadow-md p-8 mb-8">
+      <h3 className="text-2xl font-bold mb-4 text-primary-dark">Mint Your Lobster Pot</h3>
+      <p className="mb-4">To begin your journey in the Lobster Fishing League, you're going to need a Lobster Pot.</p>
+      <ul className="list-disc list-inside mb-4">
+        <li>Mint cost: {mintPrice ? parseEther(mintPrice.toString()) : "Loading..."} ETH</li>
+        <li>Fish speed: 60 seconds</li>
+        <li>Quality: Common Lobsters</li>
+      </ul>
+      {address ? (
+        <div>
+          <button
+            onClick={handleMint}
+            disabled={isPending || isConfirming || !mintPrice}
+            className="bg-primary-dark text-white rounded-md px-4 py-2 hover:bg-opacity-80 disabled:bg-gray-400"
+          >
+            {isPending || isConfirming ? "Minting..." : "Mint Lobster Pot"}
+          </button>
+          {errorMessage && <p className="text-red-500 mt-2">Error: {errorMessage}</p>}
+          {isSuccess && <p className="text-green-500 mt-2">Minting successful!</p>}
+        </div>
+      ) : (
+        <p className="text-secondary-dark font-semibold">Please connect your wallet to mint</p>
+      )}
+    </section>
   );
 }
