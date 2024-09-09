@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox-viem";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-verify";
@@ -18,6 +18,7 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
 const providerApiKey = getEnvVariable("ALCHEMY_API_KEY");
 const deployerPrivateKey = getEnvVariable("DEPLOYER_PRIVATE_KEY");
 const etherscanApiKey = getEnvVariable("ETHERSCAN_API_KEY");
+const basescanApiKey = getEnvVariable("BASESCAN_API_KEY");
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -40,12 +41,12 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     base: {
-      url: `https://mainnet.base.org/${providerApiKey}`,
+      url: "https://mainnet.base.org",
       accounts: [deployerPrivateKey],
       chainId: 8453,
     },
     baseSepolia: {
-      url: `https://sepolia.base.org/${providerApiKey}`,
+      url: "https://sepolia.base.org",
       accounts: [deployerPrivateKey],
       chainId: 84532,
     },
@@ -54,13 +55,36 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
-      baseSepolia: etherscanApiKey,
-      base: etherscanApiKey,
+      base: basescanApiKey,
+      baseSepolia: basescanApiKey,
     },
+    customChains: [
+      {
+        network: "base",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org",
+        },
+      },
+      {
+        network: "baseSepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org",
+        },
+      },
+    ],
   },
   sourcify: {
     enabled: true,
   },
 };
+
+task("verify:verify", "Verifies contract on Etherscan").setAction(async (taskArgs, hre, runSuper) => {
+  console.log("Verification task args:", taskArgs);
+  await runSuper(taskArgs);
+});
 
 export default config;

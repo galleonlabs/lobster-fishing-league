@@ -44,7 +44,7 @@ describe("LobsterPotNFT", function () {
       const { lobsterPotNFT, user, MINT_PRICE } = await loadFixture(deployLobsterPotNFTFixture);
 
       await lobsterPotNFT.write.mintEquipment({ account: user.account, value: MINT_PRICE });
-      expect(await lobsterPotNFT.read.balanceOf([user.account.address])).to.equal(parseEther("1"));
+      expect(await lobsterPotNFT.read.balanceOf([user.account.address])).to.equal(1);
     });
 
     it("Should not allow minting with incorrect payment", async function () {

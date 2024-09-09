@@ -71,8 +71,8 @@ export default function GoFishing({
   return (
     <section className="bg-white rounded-xl shadow-md p-6 mb-8">
       <div className="flex items-center mb-4">
-        <Image src="/pond.png" alt="Fishing Spot" width={48} height={48} className="mr-4" />
-        <h3 className="text-2xl font-bold text-primary-dark">Fishing Spot</h3>
+        <Image src="/pond.png" alt="Fishing Pool" width={48} height={48} className="mr-4" />
+        <h3 className="text-2xl font-bold text-primary-dark">Fishing Pool</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="relative h-64 bg-blue-300 rounded-lg overflow-hidden">
@@ -100,7 +100,7 @@ export default function GoFishing({
                       disabled={isPending || isConfirming || isAnimating}
                       className="w-full bg-primary-dark text-white rounded-md px-4 py-2 hover:bg-opacity-80 disabled:bg-gray-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg mb-4"
                     >
-                      {isPending || isConfirming || isAnimating ? "Fishing..." : "Cast Your Line"}
+                      {isPending || isConfirming || isAnimating ? "Waiting..." : "Set Lobster Pot"}
                     </button>
                   ) : (
                     <div className="mb-4">
@@ -119,12 +119,12 @@ export default function GoFishing({
                   {errorMessage && <p className="text-red-500 mb-2">Error: {errorMessage}</p>}
                   {isSuccess && (
                     <div className="p-4 bg-green-100 text-green-700 rounded-md mb-4">
-                      <p className="font-semibold">Fishing successful!</p>
-                      <p>Check your inventory for your catch.</p>
+                      <p className="font-semibold">You've made a catch!</p>
+                      <p>Check your inventory to see what you have caught.</p>
                     </div>
                   )}
                   <div className="bg-blue-50 p-4 rounded-md">
-                    <h5 className="font-semibold mb-2">Fishing Spot Overview</h5>
+                    <h5 className="font-semibold mb-2">Pool Overview</h5>
                     <ul className="list-disc list-inside text-sm text-gray-700">
                       <li>Catch Rate: 1 lobster per successful cast</li>
                       <li>Cooldown: 60 seconds between casts</li>

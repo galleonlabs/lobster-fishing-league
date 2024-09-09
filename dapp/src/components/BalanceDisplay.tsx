@@ -12,7 +12,7 @@ export default function BalanceDisplay({ lobsterPotBalance, crlBalance }: Balanc
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <BalanceCard title="Equipment">
           <BalanceItem
-            icon="/fishing.png"
+            icon="/pot.png"
             alt="Lobster Pot"
             label="Lobster Pot"
             value={lobsterPotBalance?.toString() || "0"}

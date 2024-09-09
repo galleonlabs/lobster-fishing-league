@@ -2,8 +2,8 @@ import { createPublicClient, createWalletClient, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { base } from "viem/chains";
 import dotenv from "dotenv";
-import { FishingSpot__factory, CommonRedLobsterToken__factory } from "../typechain-types";
-
+import * as fishingSpot from "../artifacts/contracts/FishingSpot.sol/FishingSpot.json";
+import * as commonRedLobsterToken from "../artifacts/contracts/CommonRedLobsterToken.sol/CommonRedLobsterToken.json";
 dotenv.config();
 
 async function main() {
@@ -31,11 +31,11 @@ async function main() {
   });
 
   // Replace these with your actual deployed contract addresses
-  const fishingSpotAddress = "0xe299626f8ce4ae54bfe90a960894afcf57cae5f9"; // Your deployed FishingSpot contract address
-  const commonRedLobsterTokenAddress = "0xca413ec990295ca71824be7a0051b4610737c773"; // Your deployed CommonRedLobsterToken contract address
+  const fishingSpotAddress = "0x25586b34884eb88bfd91c2cb278788c089ca7d83"; // Your deployed FishingSpot contract address
+  const commonRedLobsterTokenAddress = "0xefb30026e8a13500dd6f5273e336aafe1a9897fc"; // Your deployed CommonRedLobsterToken contract address
 
-  const fishingSpotAbi = FishingSpot__factory.abi;
-  const commonRedLobsterTokenAbi = CommonRedLobsterToken__factory.abi;
+  const fishingSpotAbi = fishingSpot.abi;
+  const commonRedLobsterTokenAbi = commonRedLobsterToken.abi;
 
   // Amount of lobsters to bait the area with
   const baitAmount = parseEther("10000"); // Adjust this value as needed

@@ -73,10 +73,50 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
         name="CommonRedLobsterToken.sol"
         address={contractAddresses.commonRedLobsterToken}
         description="This ERC20 token represents caught lobsters that can be freely transferred and used onchain as a composable token. New Lobster types can be created by implementing ILobsterToken.sol."
-        code={`function whitelistPool(address _pool) external
-function unwhitelistPool(address _pool) external
-function mintLobstersToPool(uint256 _amount) external
-function isPoolWhitelisted(address _pool) public view returns (bool)`}
+        code={`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+contract CommonRedLobsterToken is ERC20, Ownable, ReentrancyGuard {
+    mapping(address => bool) private _whitelistedPools;
+
+    event PoolWhitelisted(address indexed pool);
+    event PoolUnwhitelisted(address indexed pool);
+    event LobstersMinted(address indexed pool, uint256 amount);
+
+    constructor() ERC20("CommonRedLobster", "CRL") Ownable(msg.sender) {}
+
+    function whitelistPool(address _pool) public onlyOwner {
+        require(_pool != address(0), "Invalid pool address");
+        require(!_whitelistedPools[_pool], "Pool already whitelisted");
+        _whitelistedPools[_pool] = true;
+        emit PoolWhitelisted(_pool);
+    }
+
+    function unwhitelistPool(address _pool) public onlyOwner {
+        require(_whitelistedPools[_pool], "Pool is not whitelisted");
+        _whitelistedPools[_pool] = false;
+        emit PoolUnwhitelisted(_pool);
+    }
+
+    function mintLobstersToPool(uint256 _amount) public nonReentrant {
+        require(
+            _whitelistedPools[msg.sender],
+            "Sender is not a whitelisted pool"
+        );
+        require(_amount > 0, "Amount must be greater than zero");
+        _mint(msg.sender, _amount);
+        emit LobstersMinted(msg.sender, _amount);
+    }
+
+    function isPoolWhitelisted(address _pool) public view returns (bool) {
+        return _whitelistedPools[_pool];
+    }
+}
+`}
         icon={<FaCoins className="text-secondary-dark" />}
       />
 
@@ -84,13 +124,64 @@ function isPoolWhitelisted(address _pool) public view returns (bool)`}
         name="LobsterPotNFT.sol"
         address={contractAddresses.lobsterPotNFT}
         description="This contract implements the IEquipmentNFT.sol interface, allowing for future equipment types to be created that enable higher rarity lobster fishing."
-        code={`function mintEquipment() public payable
-function setDevelopmentWallet(address newDevelopmentWallet) external
-function setImageURI(string memory newImageURI) external
-function withdrawFunds() external
-function MINT_PRICE() public view returns (uint256)
-function developmentWallet() public view returns (address)
-function imageURI() public view returns (string memory)`}
+        code={`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./IEquipmentNFT.sol";
+
+contract LobsterPotNFT is IEquipmentNFT, ERC721, Ownable, ReentrancyGuard {
+    uint256 private _nextTokenId;
+    uint256 public constant override MINT_PRICE = 0.001 ether;
+    address public override developmentWallet;
+    string public override imageURI;
+
+    constructor(
+        address _developmentWallet,
+        string memory _imageURI
+    ) ERC721("LobsterPot", "LPOT") Ownable(msg.sender) {
+        require(_developmentWallet != address(0), "Invalid development wallet");
+        developmentWallet = _developmentWallet;
+        imageURI = _imageURI;
+    }
+
+    function mintEquipment() public payable override nonReentrant {
+        require(msg.value == MINT_PRICE, "Incorrect ETH amount sent");
+        uint256 tokenId = _nextTokenId++;
+        _safeMint(msg.sender, tokenId);
+    }
+
+    function setDevelopmentWallet(
+        address newDevelopmentWallet
+    ) public override onlyOwner {
+        require(
+            newDevelopmentWallet != address(0),
+            "Invalid development wallet"
+        );
+        address oldWallet = developmentWallet;
+        developmentWallet = newDevelopmentWallet;
+        emit DevelopmentWalletUpdated(oldWallet, newDevelopmentWallet);
+    }
+
+    function setImageURI(string memory newImageURI) public override onlyOwner {
+        string memory oldURI = imageURI;
+        imageURI = newImageURI;
+        emit ImageURIUpdated(oldURI, newImageURI);
+    }
+
+    function withdrawFunds() public override nonReentrant {
+        require(
+            msg.sender == developmentWallet,
+            "Only development wallet can withdraw funds"
+        );
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+        (bool success, ) = payable(developmentWallet).call{value: balance}("");
+        require(success, "Withdrawal failed");
+    }
+}`}
         icon={<FaBox className="text-primary-dark" />}
       />
 
@@ -98,12 +189,59 @@ function imageURI() public view returns (string memory)`}
         name="FishingSpot.sol"
         address={contractAddresses.fishingSpot}
         description="This contract implements fishing mechanics. Fishing Pools have a finite amount of lobsters in them to fish and can vary in rarity. New pools can be created by implementing IFishingSpot.sol."
-        code={`function fish() external
-function baitArea(uint256 _amount) external
-function equipmentNFT() public view returns (IERC721)
-function lobsterToken() public view returns (ILobsterToken)
-function lobsterAmount() public view returns (uint256)
-function lastFishingTime(address fisher) public view returns (uint256)`}
+        code={`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./IFishingSpot.sol";
+import "./IEquipmentNFT.sol";
+import "./ILobsterToken.sol";
+
+contract FishingSpot is IFishingSpot, Ownable, ReentrancyGuard {
+    IERC721 public override equipmentNFT;
+    ILobsterToken public override lobsterToken;
+    uint256 public override lobsterAmount;
+    mapping(address => uint256) public override lastFishingTime;
+
+    constructor(
+        address _equipmentNFT,
+        address _lobsterToken,
+        uint256 _lobsterAmount
+    ) Ownable(msg.sender) {
+        equipmentNFT = IERC721(_equipmentNFT);
+        lobsterToken = ILobsterToken(_lobsterToken);
+        lobsterAmount = _lobsterAmount;
+        lobsterToken.approve(address(this), type(uint256).max);
+				
+        emit FishingSpotCreated(_equipmentNFT, _lobsterToken, _lobsterAmount);
+    }
+
+    function fish() public override nonReentrant {
+        require(
+            equipmentNFT.balanceOf(msg.sender) > 0,
+            "You need a Lobster Pot NFT to fish"
+        );
+        require(
+            block.timestamp >= lastFishingTime[msg.sender] + 1 minutes,
+            "Please wait for at least 1 minute before fishing again"
+        );
+        require(
+            lobsterToken.balanceOf(address(this)) >= lobsterAmount,
+            "Not enough lobster in the pool"
+        );
+
+        lobsterToken.transferFrom(address(this), msg.sender, lobsterAmount);
+        lastFishingTime[msg.sender] = block.timestamp;
+
+        emit SuccessfulFishing(msg.sender, lobsterAmount);
+    }
+
+    function baitArea(uint256 _amount) external override onlyOwner {
+        lobsterToken.mintLobstersToPool(_amount);
+        emit AreaBaited(_amount);
+    }
+}`}
         icon={<FaFish className="text-secondary" />}
       />
 

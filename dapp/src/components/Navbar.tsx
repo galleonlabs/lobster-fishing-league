@@ -1,30 +1,31 @@
 import React, { useState } from "react";
 import WalletConnect from "./WalletConnect";
 import Image from "next/image";
-import { FaHome, FaBookOpen, FaTrophy, FaGithub } from "react-icons/fa";
+import { FaGithub, FaDiscord } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Home", href: "https://lobsterfishingleague.com", icon: <FaHome /> },
-    // { name: "Guidebook", href: "#", icon: <FaBookOpen /> },
-    // { name: "Leaderboard", href: "#", icon: <FaTrophy /> },
-    { name: "GitHub", href: "https://github.com/galleonlabs/lobster-fishing-league", icon: <FaGithub /> },
+    // { name: "Home", href: "https://lobsterfishingleague.com", icon: <FaHome /> },
+    { name: "", href: "https://x.com/galleonlabs", icon: <FaXTwitter /> },
+    { name: "", href: "https://discord.gg/EHECwm6Zrj", icon: <FaDiscord /> },
+    { name: "", href: "https://github.com/galleonlabs/lobster-fishing-league", icon: <FaGithub /> },
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-primary-dark to-primary text-white py-4 px-4 rounded-b-xl shadow-lg">
+    <nav className="border-b-4 border-secondary-dark bg-gradient-to-r from-primary-dark to-primary text-white py-4 px-4 rounded-b-xl shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <Image
+            {/* <Image
               src="/lobster.png"
               alt="Lobster Fishing League"
               width={40}
               height={40}
               className="rounded-full mr-2"
-            />
+            /> */}
             <h1 className="text-2xl font-bold">Lobster Fishing League</h1>
           </div>
           <div className="hidden md:flex items-center space-x-6">

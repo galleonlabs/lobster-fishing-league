@@ -70,7 +70,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
   return (
     <section className="bg-white rounded-xl shadow-md p-6 mb-8">
       <div className="flex items-center mb-4">
-        <Image src="/tools.png" alt="Equipment Shop" width={48} height={48} className="mr-4 p-1" />
+        <Image src="/fishing.png" alt="Equipment Shop" width={48} height={48} className="mr-4 p-1" />
         <h3 className="text-2xl font-bold text-primary-dark">Equipment Shop</h3>
       </div>
       <p className="mb-4 text-text-light">Gear up for your fishing adventures! Get your equipment here.</p>
@@ -79,11 +79,11 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Image
-                src="/fishing.png"
+                src="/pot.png"
                 alt="Lobster Pot"
                 width={64}
                 height={64}
-                className="mr-4 p-2 border border-text rounded-md"
+                className="mr-4 p-1 border border-text rounded-md"
               />
               <div>
                 <h4 className="font-semibold text-lg">Lobster Pot</h4>
@@ -193,7 +193,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
           <p className="font-semibold">
             You own {lobsterPotBalance.toString()} Lobster Pot{lobsterPotBalance > BigInt(1) ? "s" : ""}!
           </p>
-          <p>Head to the Fishing Spot to start catching lobsters.</p>
+          <p>Head to the Fishing Pool below to start catching lobsters.</p>
         </div>
       )}
     </section>

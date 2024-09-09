@@ -94,9 +94,9 @@ To start playing:
 
 The contracts are deployed on the Base blockchain:
 
-- CommonRedLobsterToken: `0xca413ec990295ca71824be7a0051b4610737c773`
-- LobsterPotNFT: `0xefcae45bc663b01d5f3900409bc8f48b4f6ed534`
-- FishingSpot: `0xe299626f8ce4ae54bfe90a960894afcf57cae5f9`
+- CommonRedLobsterToken: `0xefb30026e8a13500dd6f5273e336aafe1a9897fc`
+- LobsterPotNFT: `0x521a43fc26f14335077cf0250f7e517e5dd0b022`
+- FishingSpot: `0x25586b34884eb88bfd91c2cb278788c089ca7d83`
 
 To interact with these contracts, you can use the ABI files provided in the `abis/` directory.
 

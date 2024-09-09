@@ -4,13 +4,15 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./ILobsterToken.sol";
 
-contract CommonRedLobsterToken is ERC20, Ownable, ReentrancyGuard {
+contract CommonRedLobsterToken is
+    ERC20,
+    ILobsterToken,
+    Ownable,
+    ReentrancyGuard
+{
     mapping(address => bool) private _whitelistedPools;
-
-    event PoolWhitelisted(address indexed pool);
-    event PoolUnwhitelisted(address indexed pool);
-    event LobstersMinted(address indexed pool, uint256 amount);
 
     constructor() ERC20("CommonRedLobster", "CRL") Ownable(msg.sender) {}
 
