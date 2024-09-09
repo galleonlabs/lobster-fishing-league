@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaCoins, FaBox, FaFish } from "react-icons/fa";
 
 type ContractsGuideProps = {
   contractAddresses: {
@@ -21,26 +21,31 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
     address,
     description,
     code,
+    icon,
   }: {
     name: string;
     address: string;
     description: string;
     code: string;
+    icon: React.ReactNode;
   }) => (
-    <div className="mb-6">
+    <div className="mb-6 bg-white border border-text rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105">
       <div
-        className="flex justify-between items-center text-xl font-semibold mb-2 text-primary-dark cursor-pointer hover:bg-gray-100 p-2 rounded shadow-md px-4 py-2"
+        className="flex justify-between items-center text-xl font-semibold mb-2 text-text  cursor-pointer hover:bg-primary p-4"
         onClick={() => toggleExpand(name)}
       >
-        <h4>{name}</h4>
+        <div className="flex items-center grayscale">
+          {icon}
+          <h4 className="ml-4">{name}</h4>
+        </div>
         <FaChevronDown className={`transform transition-transform ${expanded === name ? "rotate-180" : ""}`} />
       </div>
       {expanded === name && (
-        <div className="mt-4 space-y-4">
-          <p className="text-text-light">
+        <div className="p-4 bg-white text-text-light">
+          <p className="mb-2">
             Address:{" "}
             <a
-              className="break-all hover:text-primary-dark underline"
+              className="break-all text-primary-dark hover:text-primary underline"
               target="_blank"
               rel="noopener noreferrer"
               href={`https://basescan.org/address/${address}`}
@@ -48,9 +53,9 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
               {address}
             </a>
           </p>
-          <p className="text-text-light">{description}</p>
+          <p className="mb-4">{description}</p>
           <div className="bg-neutral-light p-4 rounded-md overflow-x-auto">
-            <pre className="text-sm whitespace-pre-wrap">
+            <pre className="text-sm text-text whitespace-pre-wrap">
               <code>{code}</code>
             </pre>
           </div>
@@ -60,7 +65,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
   );
 
   return (
-    <section className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8">
+    <section className="bg-white rounded-xl shadow-md p-6 mb-8 text-text">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Contracts Guide</h3>
       <p className="mb-6 text-text-light">Learn how to interact with our smart contracts and build on top of them:</p>
 
@@ -72,6 +77,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
 function unwhitelistPool(address _pool) external
 function mintLobstersToPool(uint256 _amount) external
 function isPoolWhitelisted(address _pool) public view returns (bool)`}
+        icon={<FaCoins className="text-secondary-dark" />}
       />
 
       <ContractSection
@@ -85,6 +91,7 @@ function withdrawFunds() external
 function MINT_PRICE() public view returns (uint256)
 function developmentWallet() public view returns (address)
 function imageURI() public view returns (string memory)`}
+        icon={<FaBox className="text-primary-dark" />}
       />
 
       <ContractSection
@@ -97,6 +104,7 @@ function equipmentNFT() public view returns (IERC721)
 function lobsterToken() public view returns (ILobsterToken)
 function lobsterAmount() public view returns (uint256)
 function lastFishingTime(address fisher) public view returns (uint256)`}
+        icon={<FaFish className="text-secondary" />}
       />
 
       <p className="text-text-light mt-6">

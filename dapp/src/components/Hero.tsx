@@ -8,8 +8,8 @@ export default function Hero() {
         <div className="relative w-32 h-32 mx-auto mb-8">
           <Image src="/lobster.png" alt="Lobster" layout="fill" objectFit="contain" />
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-primary-dark">Welcome to the Lobster Fishing League</h2>
-        <p className="text-lg sm:text-xl text-text-light max-w-2xl mx-auto">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-text">Lobster Fishing League</h2>
+        <p className="text-lg sm:text-lg text-text-light max-w-2xl mx-auto">
           Take some time out of your busy schedule and catch some onchain lobsters with friends. Join the ultimate
           blockchain fishing experience.
         </p>

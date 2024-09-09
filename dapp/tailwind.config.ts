@@ -6,6 +6,18 @@ const config: Config = {
     extend: {
       animation: {
         "bounce-slow": "bounce 3s infinite",
+        wave: "wave 3s ease-in-out infinite",
+        "fishing-rod": "fishingRod 1s ease-in-out infinite",
+      },
+      keyframes: {
+        wave: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(10px)" },
+        },
+        fishingRod: {
+          "0%, 100%": { transform: "rotate(-10deg)" },
+          "50%": { transform: "rotate(10deg)" },
+        },
       },
       fontFamily: {
         sans: ["scape", "Inter", ...defaultTheme.fontFamily.sans],

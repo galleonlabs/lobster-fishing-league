@@ -8,7 +8,7 @@ export interface BalanceDisplayProps {
 
 export default function BalanceDisplay({ lobsterPotBalance, crlBalance }: BalanceDisplayProps) {
   return (
-    <div className="bg-primary-light rounded-xl p-4 sm:p-6">
+    <div className="bg-primary-light rounded-xl mt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <BalanceCard title="Equipment">
           <BalanceItem
