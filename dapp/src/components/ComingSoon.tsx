@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ComingSoon() {
   return (
-    <section className="bg-white rounded-lg shadow-md p-8 mb-8">
+    <section className="bg-white rounded-xl shadow-md p-8 mb-8">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Coming Soon</h3>
       <p className="mb-4 text-text-light">
         Stay tuned for exciting new features and expansions to the Lobster Fishing League ecosystem:
@@ -13,7 +13,8 @@ export default function ComingSoon() {
           rarity levels and special attributes.
         </li>
         <li>
-          <span className="font-semibold">Advanced Fishing Equipment:</span> Upgrade your gear designed to catch rarer lobsters and improve your fishing efficiency.
+          <span className="font-semibold">Advanced Fishing Equipment:</span> Upgrade your gear designed to catch rarer
+          lobsters and improve your fishing efficiency.
         </li>
         <li>
           <span className="font-semibold">Specialized Fishing Pools:</span> Explore new fishing spots tailored for
@@ -36,7 +37,8 @@ export default function ComingSoon() {
           hybrids with special traits.
         </li>
         <li>
-          <span className="font-semibold">Fishing Guilds:</span> Join or create fishing guilds to collaborate and access exclusive guild-only fishing spots.
+          <span className="font-semibold">Fishing Guilds:</span> Join or create fishing guilds to collaborate and access
+          exclusive guild-only fishing spots.
         </li>
       </ul>
     </section>

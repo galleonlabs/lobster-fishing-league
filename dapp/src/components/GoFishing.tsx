@@ -62,7 +62,7 @@ export default function GoFishing({
   }, [error]);
 
   return (
-    <section className="bg-white rounded-lg shadow-md p-8 mb-8">
+    <section className="bg-white rounded-xl shadow-md p-8 mb-8">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Go Fishing</h3>
       <p className="mb-4">Ready to catch some lobsters? Head to the fishing spot!</p>
       {address ? (

@@ -13,7 +13,7 @@ const docLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-dark text-white py-8 rounded-2xl">
+    <footer className="bg-primary-dark text-white py-8 rounded-t-2xl px-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
@@ -42,9 +42,9 @@ export default function Footer() {
                     title={title}
                     className="flex items-center gap-2 px-3 py-2 bg-primary rounded-md hover:bg-primary-light transition duration-300"
                   >
-                    <span>{icon}</span>
+                
                     <span>{title}</span>
-                    <ArrowSvg />
+             
                   </a>
                 </li>
               ))}

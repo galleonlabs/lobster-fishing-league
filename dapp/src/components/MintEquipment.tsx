@@ -65,7 +65,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
   }, [error]);
 
   return (
-    <section className="bg-white rounded-lg shadow-md p-8 mb-8">
+    <section className="bg-white rounded-xl shadow-md p-8 mb-8">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Mint Your Lobster Pot</h3>
       <p className="mb-4">To begin your journey in the Lobster Fishing League, you're going to need a Lobster Pot.</p>
       <ul className="list-disc list-inside mb-4">

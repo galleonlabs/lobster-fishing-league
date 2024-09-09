@@ -101,7 +101,7 @@ export default function Page() {
   }, [refetchLastFishingTime, refetchCrlBalance]);
 
   return (
-    <div className="min-h-screen bg-primary-light rounded-3xl px-24 text-text-default">
+    <div className="min-h-screen bg-primary-light px-24 text-text-default">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <Hero />

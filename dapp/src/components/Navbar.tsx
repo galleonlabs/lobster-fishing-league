@@ -6,15 +6,16 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-primary-dark text-white py-4 rounded-2xl shadow-md">
-      <div className="container mx-auto px-4">
+    <nav
+      className="bg-primary-dark text-white py-4 px-4 rounded-b-xl
+    "
+    >
+      <div className="container mx-auto px-4 ">
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <Image src="/lobster.png" alt="Lobster Fishing League Logo" width={40} height={40} className="mr-3" />
+          <div className="flex items-center ">
             <h1 className="text-2xl font-bold">Lobster Fishing League</h1>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-         
             <WalletConnect />
           </div>
           <div className="md:hidden">
