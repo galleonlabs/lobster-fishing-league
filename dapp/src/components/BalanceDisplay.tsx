@@ -25,15 +25,11 @@ export default function BalanceDisplay({ lobsterPotBalance, crlBalance }: Balanc
           <h4 className="font-semibold text-lg mb-2 text-text">Lobster</h4>
           <div className="flex items-center space-x-2">
             <div className="w-12 h-12 bg-secondary-light rounded-md flex items-center justify-center border border-text">
-              <Image
-                src="/lobster.png"
-                alt="Common Red Lobster"
-                width={32}
-                height={32}
-            
-              />
+              <Image src="/lobster.png" alt="Common Red Lobster" width={32} height={32} />
             </div>
-            <span className="text-text font-medium">Common Red Lobster: {crlBalance?.toString() || "0"}</span>
+            <span className="text-text font-medium">
+              Common Red Lobster: {formatEther(crlBalance)?.toString() || "0"}
+            </span>
           </div>
         </div>
       </div>
