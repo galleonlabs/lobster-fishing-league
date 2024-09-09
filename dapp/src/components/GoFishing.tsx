@@ -104,7 +104,7 @@ export default function GoFishing({
                     </button>
                   ) : (
                     <div className="mb-4">
-                      <p className="text-secondary-dark font-semibold mb-2">
+                      <p className="text-text font-semibold mb-2">
                         Cooldown active. Please wait before fishing again.
                       </p>
                       <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
@@ -133,14 +133,14 @@ export default function GoFishing({
                   </div>
                 </>
               ) : (
-                <p className="text-secondary-dark font-semibold">
+                <p className="text-text font-semibold">
                   You need a <span className="text-primary-dark">Lobster Pot</span> to fish here. Visit the Equipment
                   Shop to get one!
                 </p>
               )}
             </>
           ) : (
-            <p className="text-secondary-dark font-semibold">Please connect your wallet to start fishing</p>
+            <p className="text-text font-semibold">Please connect your wallet to start fishing</p>
           )}
         </div>
       </div>

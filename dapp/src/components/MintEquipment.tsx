@@ -148,7 +148,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
               )}
             </div>
           ) : (
-            <p className="text-secondary-dark font-semibold text-center">
+            <p className="text-text font-semibold text-center">
               Please connect your wallet to mint equipment
             </p>
           )}
