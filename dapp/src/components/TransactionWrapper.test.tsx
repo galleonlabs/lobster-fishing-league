@@ -21,6 +21,7 @@ const config = createConfig({
     [base.id]: http(),
   },
 });
+
 const queryClient = new QueryClient();
 
 const renderWithProviders = (component: JSX.Element) => {
@@ -35,8 +36,8 @@ const renderWithProviders = (component: JSX.Element) => {
 
 describe('TransactionWrapper', () => {
   it('should renders', () => {
-    renderWithProviders(<TransactionWrapper />);
-    const transaction = screen.getByText('Transact');
+    renderWithProviders(<TransactionWrapper action={'mint'} />);
+    const transaction = screen.getByText('Mint');
     expect(transaction).toBeInTheDocument();
   });
 });

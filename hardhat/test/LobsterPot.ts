@@ -1,109 +1,81 @@
-// import { expect } from "chai";
-// import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-// import { getAddress, parseEther } from "viem";
-// import hre from "hardhat";
+import { expect } from "chai";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { getAddress, parseEther } from "viem";
+import hre from "hardhat";
 
-// describe("LobsterPotNFT", function () {
-//   const IMAGE_URL = "https://galleonlabs.io/galleon.png";
-//   const NEW_IMAGE_URL = "https://newimage.com/image.png";
-//   const MINT_PRICE = parseEther("0.001");
+describe("LobsterPotNFT", function () {
+  async function deployLobsterPotNFTFixture() {
+    const [owner, user, developmentWallet] = await hre.viem.getWalletClients();
+    const publicClient = await hre.viem.getPublicClient();
 
-//   async function deployLobsterPotNFTFixture() {
-//     const [owner, user, newDevWallet] = await hre.viem.getWalletClients();
+    const MINT_PRICE = parseEther("0.001");
+    const IMAGE_URI = "https://example.com/lobster.png";
 
-//     const lobsterPotNFT = await hre.viem.deployContract("LobsterPotNFT", [owner.account.address, IMAGE_URL]);
+    const lobsterPotNFT = await hre.viem.deployContract("LobsterPotNFT", [
+      developmentWallet.account.address,
+      IMAGE_URI,
+    ]);
 
-//     return { lobsterPotNFT, owner, user, newDevWallet };
-//   }
+    return { lobsterPotNFT, owner, user, developmentWallet, MINT_PRICE, IMAGE_URI, publicClient };
+  }
 
-//   describe("Deployment", function () {
-//     it("Should set the correct development wallet and image URI", async function () {
-//       const { lobsterPotNFT, owner } = await loadFixture(deployLobsterPotNFTFixture);
+  describe("Deployment", function () {
+    it("Should set the right owner", async function () {
+      const { lobsterPotNFT, owner } = await loadFixture(deployLobsterPotNFTFixture);
 
-//       expect(await lobsterPotNFT.read.developmentWallet()).to.equal(getAddress(owner.account.address));
-//       expect(await lobsterPotNFT.read.imageURI()).to.equal(IMAGE_URL);
-//     });
-//   });
+      expect(await lobsterPotNFT.read.owner()).to.equal(getAddress(owner.account.address));
+    });
 
-//   describe("mintLobsterPot", function () {
-//     it("Should mint a new NFT when correct price is paid", async function () {
-//       const { lobsterPotNFT, user } = await loadFixture(deployLobsterPotNFTFixture);
+    it("Should set the correct development wallet", async function () {
+      const { lobsterPotNFT, developmentWallet } = await loadFixture(deployLobsterPotNFTFixture);
 
-//       await lobsterPotNFT.write.mintLobsterPot({ value: MINT_PRICE, account: user.account.address });
+      expect(await lobsterPotNFT.read.developmentWallet()).to.equal(getAddress(developmentWallet.account.address));
+    });
 
-//       expect(await lobsterPotNFT.read.balanceOf([user.account.address])).to.equal(1n);
-//     });
+    it("Should set the correct image URI", async function () {
+      const { lobsterPotNFT, IMAGE_URI } = await loadFixture(deployLobsterPotNFTFixture);
 
-//     it("Should revert when incorrect price is paid", async function () {
-//       const { lobsterPotNFT, user } = await loadFixture(deployLobsterPotNFTFixture);
+      expect(await lobsterPotNFT.read.imageURI()).to.equal(IMAGE_URI);
+    });
+  });
 
-//       await expect(
-//         lobsterPotNFT.write.mintLobsterPot({ value: parseEther("0.0005"), account: user.account.address })
-//       ).to.be.revertedWith("Incorrect ETH amount sent");
-//     });
-//   });
+  describe("Minting", function () {
+    it("Should allow minting with correct payment", async function () {
+      const { lobsterPotNFT, user, MINT_PRICE } = await loadFixture(deployLobsterPotNFTFixture);
 
-//   describe("setDevelopmentWallet", function () {
-//     it("Should update the development wallet", async function () {
-//       const { lobsterPotNFT, owner, newDevWallet } = await loadFixture(deployLobsterPotNFTFixture);
+      await lobsterPotNFT.write.mintEquipment({ account: user.account, value: MINT_PRICE });
+      expect(await lobsterPotNFT.read.balanceOf([user.account.address])).to.equal(BigInt(1));
+    });
 
-//       await lobsterPotNFT.write.setDevelopmentWallet([newDevWallet.account.address], {
-//         account: owner.account.address,
-//       });
+    it("Should not allow minting with incorrect payment", async function () {
+      const { lobsterPotNFT, user } = await loadFixture(deployLobsterPotNFTFixture);
 
-//       expect(await lobsterPotNFT.read.developmentWallet()).to.equal(getAddress(newDevWallet.account.address));
-//     });
+      await expect(
+        lobsterPotNFT.write.mintEquipment({ account: user.account, value: parseEther("0.0005") })
+      ).to.be.rejectedWith("Incorrect ETH amount sent");
+    });
+  });
 
-//     it("Should emit DevelopmentWalletUpdated event", async function () {
-//       const { lobsterPotNFT, owner, newDevWallet } = await loadFixture(deployLobsterPotNFTFixture);
+  describe("Withdrawal", function () {
+    it("Should allow development wallet to withdraw funds", async function () {
+      const { lobsterPotNFT, user, developmentWallet, MINT_PRICE, publicClient } = await loadFixture(
+        deployLobsterPotNFTFixture
+      );
 
-//       await expect(
-//         lobsterPotNFT.write.setDevelopmentWallet([newDevWallet.account.address], { account: owner.account.address })
-//       )
-//         .to.emit(lobsterPotNFT, "DevelopmentWalletUpdated")
-//         .withArgs(getAddress(owner.account.address), getAddress(newDevWallet.account.address));
-//     });
-//   });
+      await lobsterPotNFT.write.mintEquipment({ account: user.account, value: MINT_PRICE });
+      const initialBalance = await publicClient.getBalance({ address: developmentWallet.account.address });
+      await lobsterPotNFT.write.withdrawFunds({ account: developmentWallet.account });
+      const finalBalance = await publicClient.getBalance({ address: developmentWallet.account.address });
 
-//   describe("setImageURI", function () {
-//     it("Should update the image URI", async function () {
-//       const { lobsterPotNFT, owner } = await loadFixture(deployLobsterPotNFTFixture);
+      expect(finalBalance).to.be.greaterThan(initialBalance);
+    });
 
-//       await lobsterPotNFT.write.setImageURI([NEW_IMAGE_URL], { account: owner.account.address });
+    it("Should not allow non-development wallet to withdraw funds", async function () {
+      const { lobsterPotNFT, user } = await loadFixture(deployLobsterPotNFTFixture);
 
-//       expect(await lobsterPotNFT.read.imageURI()).to.equal(NEW_IMAGE_URL);
-//     });
-
-//     it("Should emit ImageURIUpdated event", async function () {
-//       const { lobsterPotNFT, owner } = await loadFixture(deployLobsterPotNFTFixture);
-
-//       await expect(lobsterPotNFT.write.setImageURI([NEW_IMAGE_URL], { account: owner.account.address }))
-//         .to.emit(lobsterPotNFT, "ImageURIUpdated")
-//         .withArgs(IMAGE_URL, NEW_IMAGE_URL);
-//     });
-//   });
-
-//   describe("withdrawFunds", function () {
-//     it("Should allow development wallet to withdraw funds", async function () {
-//       const { lobsterPotNFT, owner, user } = await loadFixture(deployLobsterPotNFTFixture);
-
-//       // Mint an NFT to add funds to the contract
-//       await lobsterPotNFT.write.mintLobsterPot({ value: MINT_PRICE, account: user.account.address });
-
-//       console.log("current dev wallet", await lobsterPotNFT.read.developmentWallet());
-
-//       const pClient = await hre.viem.getPublicClient();
-//       const initialBalance = await pClient.getBalance({ address: owner.account.address });
-//       await lobsterPotNFT.write.withdrawFunds({ account: owner.account.address });
-//       const finalBalance = await pClient.getBalance({ address: owner.account.address });
-
-//       expect(finalBalance).to.be.gt(initialBalance);
-//     });
-
-//     it("Should revert if called by non-development wallet", async function () {
-//       const { lobsterPotNFT, user } = await loadFixture(deployLobsterPotNFTFixture);
-
-//       await expect(lobsterPotNFT.write.withdrawFunds({ account: user.account.address })).to.be.reverted;
-//     });
-//   });
-// });
+      await expect(lobsterPotNFT.write.withdrawFunds({ account: user.account })).to.be.rejectedWith(
+        "Only development wallet can withdraw funds"
+      );
+    });
+  });
+});

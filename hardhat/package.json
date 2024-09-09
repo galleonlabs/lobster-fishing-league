@@ -9,11 +9,20 @@
     "test": "hardhat test",
     "lint": "hardhat lint",
     "flatten": "hardhat flatten",
-    "chain": "hardhat node --network hardhat"
+    "chain": "hardhat node --network hardhat",
+    "deploy-lobster-token": "hardhat run scripts/deploy-common-red-lobster-token.ts --network base",
+    "deploy-lobster-pot": "hardhat run scripts/deploy-lobster-pot.ts --network base",
+    "deploy-fishing-spot": "hardhat run scripts/deploy-fishing-spot.ts --network base",
+    "verify-lobster-token": "hardhat run scripts/verify-common-red-lobster-token.ts --network base",
+    "verify-lobster-pot": "hardhat run scripts/verify-lobster-pot.ts --network base",
+    "verify-fishing-spot": "hardhat run scripts/verify-fishing-spot.ts --network base"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
-    "hardhat": "^2.22.10"
+    "@nomicfoundation/hardhat-viem": "^2.0.4",
+    "hardhat": "^2.22.10",
+    "viem": "^2.21.3"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",

@@ -21,25 +21,25 @@ export function useWamigConfig() {
   return useMemo(() => {
     const connectors = connectorsForWallets(
       [
+        // {
+        //   groupName: "Recommended Wallet",
+        //   wallets: [coinbaseWallet],
+        // },
         {
-          groupName: 'Recommended Wallet',
-          wallets: [coinbaseWallet],
-        },
-        {
-          groupName: 'Other Wallets',
+          groupName: "Other Wallets",
           wallets: [rainbowWallet, metaMaskWallet],
         },
       ],
       {
-        appName: 'onchainkit',
+        appName: "lobster-fishing-league",
         projectId,
-      },
+      }
     );
 
     const wagmiConfig = createConfig({
       chains: [base, baseSepolia],
       // turn off injected provider discovery
-      multiInjectedProviderDiscovery: false,
+      multiInjectedProviderDiscovery: true,
       connectors,
       ssr: true,
       transports: {

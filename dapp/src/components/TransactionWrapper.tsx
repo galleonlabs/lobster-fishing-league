@@ -8,12 +8,15 @@ import {
 } from "@coinbase/onchainkit/transaction";
 import type { TransactionError, TransactionResponse } from "@coinbase/onchainkit/transaction";
 import type { ContractFunctionParameters } from "viem";
+import { useChainId } from "wagmi";
+import { parseEther } from "viem";
 import {
   BASE_SEPOLIA_CHAIN_ID,
+  BASE_MAINNET_CHAIN_ID,
+  getContractAddresses,
   lobsterPotNFTABI,
-  lobsterPotNFTAddress,
   fishingSpotABI,
-  fishingSpotAddress,
+  isSupportedNetwork,
 } from "../constants";
 
 type TransactionWrapperProps = {
@@ -21,20 +24,32 @@ type TransactionWrapperProps = {
 };
 
 export default function TransactionWrapper({ action }: TransactionWrapperProps) {
+  const chainId = useChainId();
+  const defaultChainId = process.env.NODE_ENV === "development" ? BASE_SEPOLIA_CHAIN_ID : BASE_MAINNET_CHAIN_ID;
+
+  const currentChainId = chainId || defaultChainId;
+
+  if (!isSupportedNetwork(currentChainId)) {
+    console.error("Unsupported network");
+    return null;
+  }
+
+  const contractAddresses = getContractAddresses(currentChainId);
+
   const contracts =
     action === "mint"
       ? ([
           {
-            address: lobsterPotNFTAddress,
+            address: contractAddresses.lobsterPotNFT,
             abi: lobsterPotNFTABI,
-            functionName: "mintLobsterPot",
+            functionName: "mintEquipment",
             args: [],
-            value: "0.001", // MINT_PRICE in ETH
+            value: parseEther("0.001"), // Convert to Wei
           },
         ] as unknown as ContractFunctionParameters[])
       : ([
           {
-            address: fishingSpotAddress,
+            address: contractAddresses.fishingSpot,
             abi: fishingSpotABI,
             functionName: "fish",
             args: [],
@@ -43,6 +58,7 @@ export default function TransactionWrapper({ action }: TransactionWrapperProps) 
 
   const handleError = (err: TransactionError) => {
     console.error("Transaction error:", err);
+    console.error("Error details:", JSON.stringify(err, null, 2));
     // You can add more user-friendly error handling here
   };
 
@@ -56,12 +72,12 @@ export default function TransactionWrapper({ action }: TransactionWrapperProps) 
       <Transaction
         contracts={contracts}
         className=""
-        chainId={BASE_SEPOLIA_CHAIN_ID}
+        chainId={currentChainId}
         onError={handleError}
         onSuccess={handleSuccess}
       >
         <TransactionButton
-          className=" bg-black rounded-md text-white hover:bg-black hover:opacity-70"
+          className="bg-black rounded-md text-white hover:bg-black hover:opacity-70"
           text={action === "mint" ? "Mint" : "Fish"}
         ></TransactionButton>
         <TransactionStatus>

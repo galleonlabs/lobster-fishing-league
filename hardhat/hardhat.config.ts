@@ -21,7 +21,7 @@ const etherscanApiKey = getEnvVariable("ETHERSCAN_API_KEY");
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.24",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,
@@ -87,6 +87,7 @@ const config: HardhatUserConfig = {
     baseSepolia: {
       url: "https://sepolia.base.org",
       accounts: [deployerPrivateKey],
+      chainId: 84532,
     },
     scrollSepolia: {
       url: "https://sepolia-rpc.scroll.io",
@@ -109,6 +110,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: etherscanApiKey,
       sepolia: etherscanApiKey,
+      baseSepolia: etherscanApiKey,
       base: etherscanApiKey,
     },
     customChains: [
