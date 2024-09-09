@@ -96,7 +96,8 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
             </div>
           </div>
           <p className="text-gray-700 mb-4">
-            There's no frills with the Lobster Pot. It's a simple tool that gets the job done. Equip it to start catching.
+            There's no frills with the Lobster Pot. It's a simple tool that gets the job done. Equip it to start
+            catching.
           </p>
           <ul className="list-disc list-inside mb-4 text-sm text-gray-700">
             <li>Catch speed: 60 seconds</li>
@@ -174,8 +175,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
               </div>
             </div>
             <p className="text-gray-700 mb-4">
-              Stay tuned for exciting new fishing equipment! We're working on advanced gear to help you catch rare and
-              exotic lobsters.
+              Watch out for exciting new gear! We're working on advanced equipment to help make those rare catches.
             </p>
             <ul className="list-disc list-inside mb-4 text-sm text-gray-700">
               <li>Enhanced catch rates</li>

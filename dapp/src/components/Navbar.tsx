@@ -32,7 +32,7 @@ export default function Navbar() {
               <a
                 key={item.name}
                 href={item.href}
-                className="flex items-center space-x-1 hover:text-secondary-light transition duration-300"
+                className="flex items-center text-lg space-x-2 hover:text-secondary-light transition duration-300"
               >
                 {item.icon}
                 <span>{item.name}</span>

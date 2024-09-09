@@ -20,7 +20,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["scape", "Inter", ...defaultTheme.fontFamily.sans],
+        sans: ["monospace", "Inter", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         primary: {
