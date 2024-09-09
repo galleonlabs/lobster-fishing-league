@@ -1,10 +1,11 @@
 import hre from "hardhat";
+import { parseEther } from "viem";
 
 async function main() {
-  const contractAddress = "0x1669329730A555F5EFbFA413700793430C554793"; // Replace with the deployed contract address
-  const lobsterPotNFTAddress = "0x0Ef5b42084af61E040d6febA6E43bcA4fAaD15cB"; // Replace with the LobsterPotNFT address
-  const commonRedLobsterTokenAddress = "0x3b8cEF7960F80A5fA38F2Edc1aC728C4Cb52Bc94"; // Replace with the CommonRedLobsterToken address
-  const lobsterAmount = BigInt(1); // Make sure this matches the value used in deployment
+  const contractAddress = "0xe299626f8ce4ae54bfe90a960894afcf57cae5f9"; // Replace with the deployed contract address
+  const lobsterPotNFTAddress = "0xefcae45bc663b01d5f3900409bc8f48b4f6ed534"; // Replace with the LobsterPotNFT address
+  const commonRedLobsterTokenAddress = "0xca413ec990295ca71824be7a0051b4610737c773"; // Replace with the CommonRedLobsterToken address
+  const lobsterAmount = parseEther("1"); // Make sure this matches the value used in deployment
 
   console.log("Verifying FishingSpot...");
 

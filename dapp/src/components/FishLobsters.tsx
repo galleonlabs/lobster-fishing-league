@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getContractAddresses, fishingSpotABI, isSupportedNetwork } from "../constants";
 
-export default function FishLobsters() {
+type FishLobstersProps = {
+  onSuccess: () => void;
+};
+
+export default function FishLobsters({ onSuccess }: FishLobstersProps) {
   const { address } = useAccount();
   const chainId = useChainId();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -19,12 +23,16 @@ export default function FishLobsters() {
     hash,
   });
 
-  const handleFish = () => {
-    writeContract({
-      address: contractAddresses.fishingSpot,
-      abi: fishingSpotABI,
-      functionName: "fish",
-    });
+  const handleFish = async () => {
+    try {
+      await writeContract({
+        address: contractAddresses.fishingSpot,
+        abi: fishingSpotABI,
+        functionName: "fish",
+      });
+    } catch (error) {
+      console.error("Error fishing:", error);
+    }
   };
 
   useEffect(() => {
@@ -32,6 +40,12 @@ export default function FishLobsters() {
       setIsSuccess(true);
     }
   }, [isConfirmed]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      onSuccess();
+    }
+  }, [isSuccess]);
 
   if (!address) {
     return <div>Please connect your wallet to fish</div>;

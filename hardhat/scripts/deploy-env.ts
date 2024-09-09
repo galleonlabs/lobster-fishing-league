@@ -20,7 +20,7 @@ async function main() {
 
   // Deploy FishingSpot
   console.log("Deploying FishingSpot...");
-  const lobsterAmount = BigInt(1); // Adjust as needed
+  const lobsterAmount = parseEther("1"); // Adjust as needed
   const fishingSpot = await hre.viem.deployContract("FishingSpot", [
     lobsterPotNFT.address,
     commonRedLobsterToken.address,

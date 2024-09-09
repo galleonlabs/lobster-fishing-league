@@ -31,8 +31,8 @@ async function main() {
   });
 
   // Replace these with your actual deployed contract addresses
-  const fishingSpotAddress = "0x73746cd30f31fc629d0ab23d0008c5accd89ed80"; // Your deployed FishingSpot contract address
-  const commonRedLobsterTokenAddress = "0x4e393232c1bad4297cf98da7cc17bc094ab01755"; // Your deployed CommonRedLobsterToken contract address
+  const fishingSpotAddress = "0xe299626f8ce4ae54bfe90a960894afcf57cae5f9"; // Your deployed FishingSpot contract address
+  const commonRedLobsterTokenAddress = "0xca413ec990295ca71824be7a0051b4610737c773"; // Your deployed CommonRedLobsterToken contract address
 
   const fishingSpotAbi = FishingSpot__factory.abi;
   const commonRedLobsterTokenAbi = CommonRedLobsterToken__factory.abi;

@@ -5,7 +5,7 @@ export const test_commonRedLobsterTokenAddress = "0x58108c89530F1De255421b35B207
 export const test_lobsterPotNFTAddress = "0x1c1B9c0AdACE0D01807B54652ed379f7E1Cc133c" as `0x${string}`;
 export const test_fishingSpotAddress = "0xa28605A467Afe56d63D306067dcd699d02cDf2c0" as `0x${string}`;
 
-export const prod_lobsterPotNFTAddress = "0x7a8eac96611fc2220ec2f2ded9c0772b5987c7d4" as `0x${string}`;
+export const prod_lobsterPotNFTAddress = "0xefcae45bc663b01d5f3900409bc8f48b4f6ed534" as `0x${string}`;
 export const lobsterPotNFTABI = [
   {
     inputs: [
@@ -654,7 +654,7 @@ export const lobsterPotNFTABI = [
   },
 ] as const;
 
-export const prod_fishingSpotAddress = "0x73746cd30f31fc629d0ab23d0008c5accd89ed80" as `0x${string}`;
+export const prod_fishingSpotAddress = "0xe299626f8ce4ae54bfe90a960894afcf57cae5f9" as `0x${string}`;
 export const fishingSpotABI = [
   {
     inputs: [
@@ -893,7 +893,7 @@ export const fishingSpotABI = [
   },
 ] as const;
 
-export const prod_commonRedLobsterTokenAddress = "0x4e393232c1bad4297cf98da7cc17bc094ab01755" as `0x${string}`;
+export const prod_commonRedLobsterTokenAddress = "0xca413ec990295ca71824be7a0051b4610737c773" as `0x${string}`;
 export const commonRedLobsterTokenABI = [
   {
     inputs: [],

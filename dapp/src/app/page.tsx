@@ -6,7 +6,7 @@ import BalanceDisplay from "src/components/BalanceDisplay";
 import WalletConnect from "src/components/WalletConnect";
 import { ONCHAINKIT_LINK } from "src/links";
 import { useAccount, useChainId, useReadContract } from "wagmi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   lobsterPotNFTABI,
   commonRedLobsterTokenABI,
@@ -19,6 +19,7 @@ export default function Page() {
   const { address } = useAccount();
   const chainId = useChainId();
   const [lastFishingTime, setLastFishingTime] = useState<bigint>(BigInt(0));
+  const [remainingCooldown, setRemainingCooldown] = useState<number>(0);
 
   if (!chainId || !isSupportedNetwork(chainId)) {
     return <div>Unsupported network. Please connect to Base Mainnet or Base Sepolia.</div>;
@@ -26,26 +27,38 @@ export default function Page() {
 
   const contractAddresses = getContractAddresses(chainId);
 
-  const { data: lobsterPotBalance } = useReadContract({
+  const { data: lobsterPotBalance, refetch: refetchLobsterPotBalance } = useReadContract({
     address: contractAddresses.lobsterPotNFT,
     abi: lobsterPotNFTABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
   });
 
-  const { data: crlBalance } = useReadContract({
+  const { data: crlBalance, refetch: refetchCrlBalance } = useReadContract({
     address: contractAddresses.commonRedLobsterToken,
     abi: commonRedLobsterTokenABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
   });
 
-  const { data: fetchedLastFishingTime } = useReadContract({
+  const { data: fetchedLastFishingTime, refetch: refetchLastFishingTime } = useReadContract({
     address: contractAddresses.fishingSpot,
     abi: fishingSpotABI,
     functionName: "lastFishingTime",
     args: address ? [address] : undefined,
   });
+
+  const updateCooldown = useCallback(() => {
+    if (!lastFishingTime) return;
+    const now = BigInt(Math.floor(Date.now() / 1000));
+    const cooldownTime = BigInt(60); // 60 seconds cooldown
+    const timePassed = now - lastFishingTime;
+    if (timePassed < cooldownTime) {
+      setRemainingCooldown(Number(cooldownTime - timePassed));
+    } else {
+      setRemainingCooldown(0);
+    }
+  }, [lastFishingTime]);
 
   useEffect(() => {
     if (fetchedLastFishingTime) {
@@ -53,11 +66,33 @@ export default function Page() {
     }
   }, [fetchedLastFishingTime]);
 
-  const canFish = () => {
-    if (!lastFishingTime) return true;
-    const now = BigInt(Math.floor(Date.now() / 1000));
-    return now - lastFishingTime >= BigInt(60); // 60 seconds cooldown
-  };
+  useEffect(() => {
+    updateCooldown();
+    const interval = setInterval(updateCooldown, 1000);
+    return () => clearInterval(interval);
+  }, [updateCooldown]);
+
+  useEffect(() => {
+    // Set up an interval to refetch data periodically
+    const interval = setInterval(() => {
+      refetchLobsterPotBalance();
+      refetchCrlBalance();
+      refetchLastFishingTime();
+    }, 10000); // Refetch every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [refetchLobsterPotBalance, refetchCrlBalance, refetchLastFishingTime]);
+
+  const canFish = remainingCooldown === 0;
+
+  const handleMintSuccess = useCallback(() => {
+    refetchLobsterPotBalance();
+  }, [refetchLobsterPotBalance]);
+
+  const handleFishSuccess = useCallback(() => {
+    refetchLastFishingTime();
+    refetchCrlBalance();
+  }, [refetchLastFishingTime, refetchCrlBalance]);
 
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
@@ -90,7 +125,7 @@ export default function Page() {
             <div>
               {address ? (
                 <div className="w-48 pt-2">
-                  <MintEquipment />
+                  <MintEquipment onSuccess={handleMintSuccess} />
                 </div>
               ) : (
                 <p className="italic font-semibold">Please connect your wallet to mint</p>
@@ -115,12 +150,14 @@ export default function Page() {
             <div className="pt-2">
               {lobsterPotBalance && lobsterPotBalance > BigInt(0) ? (
                 <div>
-                  {canFish() ? (
+                  {canFish ? (
                     <div className="w-48">
-                      <FishLobsters />
+                      <FishLobsters onSuccess={handleFishSuccess} />
                     </div>
                   ) : (
-                    <p className="font-normal text-md">Cool down active. Please wait before fishing again.</p>
+                    <p className="font-normal text-md">
+                      Cooldown active. Please wait {remainingCooldown} seconds before fishing again.
+                    </p>
                   )}
                 </div>
               ) : (

@@ -7,38 +7,6 @@ import { CommonRedLobsterToken__factory, LobsterPotNFT__factory, FishingSpot__fa
 
 dotenv.config();
 
-// Utility function to sleep
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Function to verify contract using Hardhat
-async function verifyContract(address: string, constructorArguments: any[]) {
-  const maxRetries = 1;
-  const delayBetweenRetries = 10000; // 30 seconds
-
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      console.log(`Attempt ${i + 1} to verify contract at ${address}`);
-      await hre.run("verify:verify", {
-        address: address,
-        constructorArguments: constructorArguments,
-      });
-      console.log("Verification successful!");
-      return;
-    } catch (error: any) {
-      if (error.message.includes("Already Verified")) {
-        console.log("Contract is already verified.");
-        return;
-      }
-      console.log(`Verification failed. Error: ${error.message}`);
-      if (i < maxRetries - 1) {
-        console.log(`Waiting for ${delayBetweenRetries / 1000} seconds before retrying...`);
-        await sleep(delayBetweenRetries);
-      }
-    }
-  }
-  console.log("Max retries reached. Verification unsuccessful.");
-}
-
 async function main() {
   const privateKey = process.env.DEPLOYER_PRIVATE_KEY;
   if (!privateKey) {
@@ -46,7 +14,6 @@ async function main() {
   }
 
   const pkey = `0x${privateKey.startsWith("0x") ? privateKey.slice(2) : privateKey}` as `0x${string}`;
-
 
   const account = privateKeyToAccount(pkey as `0x${string}`);
 
@@ -81,9 +48,6 @@ async function main() {
   if (!commonRedLobsterTokenAddress) throw new Error("CommonRedLobsterToken deployment failed");
   console.log("CommonRedLobsterToken deployed to:", commonRedLobsterTokenAddress);
 
-  console.log("Verifying CommonRedLobsterToken...");
-  await verifyContract(commonRedLobsterTokenAddress, []);
-
   // Deploy LobsterPotNFT
   console.log("Deploying LobsterPotNFT...");
   const developmentWallet = account.address;
@@ -105,12 +69,9 @@ async function main() {
   if (!lobsterPotNFTAddress) throw new Error("LobsterPotNFT deployment failed");
   console.log("LobsterPotNFT deployed to:", lobsterPotNFTAddress);
 
-  console.log("Verifying LobsterPotNFT...");
-  await verifyContract(lobsterPotNFTAddress, [developmentWallet, imageURI]);
-
   // Deploy FishingSpot
   console.log("Deploying FishingSpot...");
-  const lobsterAmount = BigInt(1);
+  const lobsterAmount = parseEther("1");
   const fishingSpotBytecode = FishingSpot__factory.bytecode;
   const fishingSpotAbi = FishingSpot__factory.abi;
   const fishingSpotHash = await walletClient.deployContract({
@@ -127,9 +88,6 @@ async function main() {
   const fishingSpotAddress = fishingSpotReceipt.contractAddress;
   if (!fishingSpotAddress) throw new Error("FishingSpot deployment failed");
   console.log("FishingSpot deployed to:", fishingSpotAddress);
-
-  console.log("Verifying FishingSpot...");
-  await verifyContract(fishingSpotAddress, [lobsterPotNFTAddress, commonRedLobsterTokenAddress, lobsterAmount]);
 
   // Whitelist the FishingSpot in the CommonRedLobsterToken contract
   console.log("Whitelisting FishingSpot...");

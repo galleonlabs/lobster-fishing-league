@@ -12,7 +12,7 @@ describe("FishingSpot", function () {
       "https://example.com/lobster.png",
     ]);
     const commonRedLobsterToken = await hre.viem.deployContract("CommonRedLobsterToken");
-    const LOBSTER_AMOUNT = BigInt(1);
+    const LOBSTER_AMOUNT = parseEther("1");
 
     const fishingSpot = await hre.viem.deployContract("FishingSpot", [
       lobsterPotNFT.address,

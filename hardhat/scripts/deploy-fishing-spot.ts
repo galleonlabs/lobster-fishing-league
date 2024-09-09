@@ -7,7 +7,7 @@ async function main() {
   // Make sure to replace these with the actual deployed addresses
   const lobsterPotNFTAddress = "0x0Ef5b42084af61E040d6febA6E43bcA4fAaD15cB"; // Replace with actual LobsterPotNFT address
   const commonRedLobsterTokenAddress = "0x3b8cEF7960F80A5fA38F2Edc1aC728C4Cb52Bc94"; // Replace with actual CommonRedLobsterToken address
-  const lobsterAmount = BigInt(1); // Adjust as needed
+  const lobsterAmount = parseEther("1"); // Adjust as needed
 
   const fishingSpot = await hre.viem.deployContract("FishingSpot", [
     lobsterPotNFTAddress,
