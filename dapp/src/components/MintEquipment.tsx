@@ -69,9 +69,18 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Mint Your Lobster Pot</h3>
       <p className="mb-4">To begin your journey in the Lobster Fishing League, you're going to need a Lobster Pot.</p>
       <ul className="list-disc list-inside mb-4">
-        <li>Mint cost: {mintPrice ? formatEther(mintPrice).toString() : "Loading..."} ETH</li>
-        <li>Fish speed: 60 seconds</li>
-        <li>Quality: Common Lobsters</li>
+        <p>
+          <span className="font-semibold">Mint Cost:</span>{" "}
+          {mintPrice ? formatEther(mintPrice).toString() : "Loading..."} ETH{" "}
+        </p>
+
+        <p>
+          <span className="font-semibold">Catching Speed:</span> 60 seconds
+        </p>
+
+        <p>
+          <span className="font-semibold">Max Quality:</span> Common Lobsters
+        </p>
       </ul>
       {address ? (
         <div>

@@ -34,14 +34,8 @@ export default function Navbar() {
         </div>
         {isMenuOpen && (
           <div className="mt-4 md:hidden">
-            <a href="#" className="block py-2 hover:text-secondary-light transition duration-300">
+            <a href="https://lobsterfishingleague.com" className="block py-2 hover:text-secondary-light transition duration-300">
               Home
-            </a>
-            <a href="#" className="block py-2 hover:text-secondary-light transition duration-300">
-              About
-            </a>
-            <a href="#" className="block py-2 hover:text-secondary-light transition duration-300">
-              Leaderboard
             </a>
             <div className="mt-2">
               <WalletConnect />

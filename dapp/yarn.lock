@@ -1503,6 +1503,11 @@
 "@next/env@14.2.7":
   version "14.2.7"
 
+"@next/font@^14.2.8":
+  version "14.2.8"
+  resolved "https://registry.npmjs.org/@next/font/-/font-14.2.8.tgz"
+  integrity sha512-yQbLs/Sc9PXXsJv3gj5w/2Ubesge+m1VJNH5io8KcxYJfjbJnAywtMvZRUbWX2hyeB/o7Xu1PJKAqbjaBrzDTQ==
+
 "@next/swc-darwin-arm64@14.2.7":
   version "14.2.7"
 
@@ -5412,7 +5417,7 @@ neo-async@^2.5.0:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next@^14.2.5:
+next@*, next@^14.2.5:
   version "14.2.7"
   dependencies:
     "@next/env" "14.2.7"
