@@ -17,10 +17,20 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
       <div className="mb-6">
         <h4 className="text-xl font-semibold mb-2 text-primary-dark">LobsterPotNFT</h4>
         <p className="mb-2 text-text-light">
-          Address: <code className="bg-neutral-light px-1 py-0.5 rounded">{contractAddresses.lobsterPotNFT}</code>
+          Address:{" "}
+          <code className="bg-neutral-light px-1 py-0.5 rounded">
+            <a
+              className="hover:text-primary-dark"
+              target="_blank"
+              href={"https://basescan.org/address/" + contractAddresses.lobsterPotNFT}
+            >
+              {contractAddresses.lobsterPotNFT}
+            </a>
+          </code>
         </p>
         <p className="mb-2 text-text-light">
-          This contract implements the IEquipmentNFT interface, allowing for future equipment types.
+          This contract implements the IEquipmentNFT.sol interface, allowing for future equipment types to be created
+          that enable higher rarity lobster fishing.
         </p>
         <div className="bg-neutral-light p-4 rounded-md">
           <pre className="text-sm">
@@ -37,10 +47,17 @@ function tokenURI(uint256 tokenId) public view returns (string memory)`}
         <h4 className="text-xl font-semibold mb-2 text-primary-dark">CommonRedLobsterToken</h4>
         <p className="mb-2 text-text-light">
           Address:{" "}
-          <code className="bg-neutral-light px-1 py-0.5 rounded">{contractAddresses.commonRedLobsterToken}</code>
+          <a
+            className="hover:text-primary-dark"
+            target="_blank"
+            href={"https://basescan.org/address/" + contractAddresses.commonRedLobsterToken}
+          >
+            {contractAddresses.commonRedLobsterToken}
+          </a>
         </p>
         <p className="mb-2 text-text-light">
-          This ERC20 token represents caught lobsters. It can be extended for new lobster types.
+          This ERC20 token represents caught lobsters that can be freely transferred and used onchain as a composable
+          token. New Lobster types can be created by implementing ILobsterToken.sol.
         </p>
         <div className="bg-neutral-light p-4 rounded-md">
           <pre className="text-sm">
@@ -56,10 +73,18 @@ function balanceOf(address account) public view returns (uint256)`}
       <div className="mb-6">
         <h4 className="text-xl font-semibold mb-2 text-primary-dark">FishingSpot</h4>
         <p className="mb-2 text-text-light">
-          Address: <code className="bg-neutral-light px-1 py-0.5 rounded">{contractAddresses.fishingSpot}</code>
+          Address:{" "}
+          <a
+            className="hover:text-primary-dark"
+            target="_blank"
+            href={"https://basescan.org/address/" + contractAddresses.fishingSpot}
+          >
+            {contractAddresses.fishingSpot}
+          </a>
         </p>
         <p className="mb-2 text-text-light">
-          This contract implements fishing mechanics. New pools can be created by implementing the same interface.
+          This contract implements fishing mechanics, Fishing Pools have a finite amount of Lobsters in them to fish and
+          can vary in rarity. New pools can be created by implementing IFishingSpot.sol.
         </p>
         <div className="bg-neutral-light p-4 rounded-md">
           <pre className="text-sm">
@@ -75,7 +100,7 @@ function lastFishingTime(address fisher) public view returns (uint256)`}
       <p className="text-text-light">
         Developers can create new equipment types, lobster tokens, or fishing spots by implementing the respective
         interfaces and integrating with these base contracts. We will whitelist new pools so they can be baited with
-        Lobsters!
+        Lobsters for all to enjoy!
       </p>
     </section>
   );

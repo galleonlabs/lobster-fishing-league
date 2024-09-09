@@ -5,7 +5,7 @@ import { DISCORD_LINK, GITHUB_LINK, ONCHAINKIT_LINK, TWITTER_LINK } from "src/li
 import ArrowSvg from "src/svg/ArrowSvg";
 
 const docLinks = [
-  { href: ONCHAINKIT_LINK, title: "Docs", icon: "📚" },
+  // { href: ONCHAINKIT_LINK, title: "Docs", icon: "📚" },
   { href: GITHUB_LINK, title: "Github", icon: "💻" },
   { href: DISCORD_LINK, title: "Discord", icon: "🎮" },
   { href: TWITTER_LINK, title: "X", icon: "🐦" },

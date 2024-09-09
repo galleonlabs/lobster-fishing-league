@@ -13,8 +13,7 @@ export default function ComingSoon() {
           rarity levels and special attributes.
         </li>
         <li>
-          <span className="font-semibold">Advanced Fishing Equipment:</span> Upgrade your gear with new types of
-          equipment designed to catch rarer lobsters and improve your fishing efficiency.
+          <span className="font-semibold">Advanced Fishing Equipment:</span> Upgrade your gear designed to catch rarer lobsters and improve your fishing efficiency.
         </li>
         <li>
           <span className="font-semibold">Specialized Fishing Pools:</span> Explore new fishing spots tailored for
@@ -30,15 +29,14 @@ export default function ComingSoon() {
         </li>
         <li>
           <span className="font-semibold">Lobster Grand Exchange:</span> Trade your caught lobsters in a decentralized
-          marketplace, setting your own prices and discovering rare specimens.
+          marketplace and discovering rare specimens.
         </li>
         <li>
           <span className="font-semibold">Lobster Breeding:</span> Combine different lobster species to create unique
           hybrids with special traits.
         </li>
         <li>
-          <span className="font-semibold">Fishing Guilds:</span> Join or create fishing guilds to collaborate with other
-          players and access exclusive guild-only fishing spots.
+          <span className="font-semibold">Fishing Guilds:</span> Join or create fishing guilds to collaborate and access exclusive guild-only fishing spots.
         </li>
       </ul>
     </section>

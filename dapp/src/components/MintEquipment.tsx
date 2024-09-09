@@ -1,6 +1,6 @@
 import React from "react";
 import { useChainId, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
-import { parseEther } from "viem";
+import { parseEther, formatEther } from "viem";
 import { getContractAddresses, lobsterPotNFTABI, isSupportedNetwork } from "../constants";
 
 type MintEquipmentProps = {
@@ -69,7 +69,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Mint Your Lobster Pot</h3>
       <p className="mb-4">To begin your journey in the Lobster Fishing League, you're going to need a Lobster Pot.</p>
       <ul className="list-disc list-inside mb-4">
-        <li>Mint cost: {mintPrice ? parseEther(mintPrice.toString()) : "Loading..."} ETH</li>
+        <li>Mint cost: {mintPrice ? formatEther(mintPrice).toString() : "Loading..."} ETH</li>
         <li>Fish speed: 60 seconds</li>
         <li>Quality: Common Lobsters</li>
       </ul>
