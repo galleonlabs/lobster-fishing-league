@@ -37,7 +37,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     title={title}
-                    className="flex items-center gap-2 px-3 py-2 bg-primary-light rounded-sm hover:bg-primary transition duration-300 text-text hover:text-text-light"
+                    className="flex items-center gap-2 px-3 py-2 bg-primary-light rounded-sm hover:bg-neutral-light transition duration-300 text-text hover:text-text-light"
                   >
                     {icon}
                     <span>{title}</span>

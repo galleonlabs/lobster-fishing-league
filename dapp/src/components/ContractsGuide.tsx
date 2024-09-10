@@ -31,7 +31,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
   }) => (
     <div className="mb-6 bg-white border border-text rounded-sm overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105">
       <div
-        className="flex justify-between items-center text-xl font-semibold mb-2 text-text  cursor-pointer hover:bg-primary p-4"
+        className="flex justify-between items-center text-xl font-semibold mb-2 text-text  cursor-pointer hover:bg-primary-light p-4"
         onClick={() => toggleExpand(name)}
       >
         <div className="flex items-center grayscale">

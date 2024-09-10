@@ -25,24 +25,24 @@ const config: Config = {
       },
       colors: {
         primary: {
-          light: "#E6F3FF", // Very light blue
-          DEFAULT: "#B3D9FF", // Light blue
-          dark: "#80BFFF", // Medium blue
+          light: "#E6F3FF", // Light sky blue (representing clear skies)
+          DEFAULT: "#4A90E2", // Ocean blue (main water color)
+          dark: "#2C3E50", // Deep sea blue (for depth and mystery)
         },
         secondary: {
-          light: "#FFF5E6", // Very light orange
-          DEFAULT: "#FFE0B3", // Light orange
-          dark: "#FFCC80", // Medium orange
+          light: "#FFF9E6", // Soft sand color (for beaches)
+          DEFAULT: "#F39C12", // Warm sunset orange (for atmosphere)
+          dark: "#D35400", // Deep orange (for contrast and warmth)
         },
         neutral: {
-          light: "#F5F5F5", // Very light gray
-          DEFAULT: "#E0E0E0", // Light gray
-          dark: "#BDBDBD", // Medium gray
+          light: "#ECF0F1", // Light gray with a hint of blue (seafoam)
+          DEFAULT: "#BDC3C7", // Medium gray (rocks and pebbles)
+          dark: "#7F8C8D", // Darker gray (wet stones)
         },
         text: {
-          light: "#4A4A4A", // Dark gray
-          DEFAULT: "#333333", // Very dark gray
-          dark: "#1A1A1A", // Almost black
+          light: "#34495E", // Slate blue (for readable but thematic text)
+          DEFAULT: "#2C3E50", // Dark blue-gray (main text color)
+          dark: "#1A2530", // Very dark blue (for high contrast text)
         },
       },
     },
