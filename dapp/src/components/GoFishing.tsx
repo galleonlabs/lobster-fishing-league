@@ -81,7 +81,7 @@ export default function GoFishing({
           <div className="absolute inset-0 flex items-center justify-center">
             {isAnimating && <div className="w-1 h-32 bg-gray-800 origin-bottom animate-fishing-rod"></div>}
             <Image
-              src="/lobster.png"
+              src="/lobster-catch.png"
               alt="Lobster"
               width={64}
               height={64}
