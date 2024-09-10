@@ -20,8 +20,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Victor Mono", ...defaultTheme.fontFamily.sans],
-        mono: ["Victor Mono", ...defaultTheme.fontFamily.mono],
+        sans: ["VT323", ...defaultTheme.fontFamily.sans],
+        mono: ["VT323", ...defaultTheme.fontFamily.mono],
       },
       colors: {
         primary: {

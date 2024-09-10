@@ -8,7 +8,7 @@ export interface BalanceDisplayProps {
 
 export default function BalanceDisplay({ lobsterPotBalance, crlBalance }: BalanceDisplayProps) {
   return (
-    <div className="bg-primary-light rounded-xl mt-8">
+    <div className="bg-primary-light rounded-sm mt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <BalanceCard title="Equipment">
           <BalanceItem
@@ -35,7 +35,7 @@ export default function BalanceDisplay({ lobsterPotBalance, crlBalance }: Balanc
 
 function BalanceCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl p-4 shadow">
+    <div className="bg-white rounded-sm p-4 shadow">
       <h4 className="font-semibold text-lg mb-4 text-text">{title}</h4>
       <div className="space-y-4">{children}</div>
     </div>
@@ -45,7 +45,7 @@ function BalanceCard({ title, children }: { title: string; children: React.React
 function BalanceItem({ icon, alt, label, value }: { icon: string; alt: string; label: string; value: string }) {
   return (
     <div className="flex items-center space-x-3">
-      <div className="w-12 h-12 bg-secondary-light rounded-md flex items-center justify-center border border-text">
+      <div className="w-12 h-12 bg-secondary-light rounded-sm flex items-center justify-center border border-text">
         {icon ? <Image src={icon} alt={alt} width={32} height={32} /> : <div className="w-8 h-8" />}
       </div>
       <div className="flex-grow">

@@ -47,7 +47,7 @@ const features = [
 
 export default function ComingSoon() {
   return (
-    <section className="bg-white rounded-xl shadow-md p-6 mb-8 text-text">
+    <section className="bg-white rounded-sm shadow-md p-6 mb-8 text-text">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Coming Soon</h3>
       <p className="mb-6 text-text-light">
         The ancient scrolls foretell of grand adventures and mystical discoveries in the Lobster Fishing League:
@@ -56,7 +56,7 @@ export default function ComingSoon() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="bg-white bg-opacity-80 rounded-lg p-4 shadow-inner border border-text transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="bg-white bg-opacity-80 rounded-sm p-4 shadow-inner border border-text transition-all duration-300 ease-in-out transform hover:scale-105"
           >
             <div className="flex items-center mb-2">
               <span>{feature.icon}</span>

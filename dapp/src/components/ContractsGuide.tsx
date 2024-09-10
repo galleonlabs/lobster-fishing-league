@@ -29,7 +29,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
     code: string;
     icon: React.ReactNode;
   }) => (
-    <div className="mb-6 bg-white border border-text rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105">
+    <div className="mb-6 bg-white border border-text rounded-sm overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105">
       <div
         className="flex justify-between items-center text-xl font-semibold mb-2 text-text  cursor-pointer hover:bg-primary p-4"
         onClick={() => toggleExpand(name)}
@@ -54,7 +54,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
             </a>
           </p>
           <p className="mb-4">{description}</p>
-          <div className="bg-neutral-light p-4 rounded-md overflow-x-auto">
+          <div className="bg-neutral-light p-4 rounded-sm overflow-x-auto">
             <pre className="text-sm text-text whitespace-pre-wrap">
               <code>{code}</code>
             </pre>
@@ -65,7 +65,7 @@ export default function ContractsGuide({ contractAddresses }: ContractsGuideProp
   );
 
   return (
-    <section className="bg-white rounded-xl shadow-md p-6 mb-8 text-text">
+    <section className="bg-white rounded-sm shadow-md p-6 mb-8 text-text">
       <h3 className="text-2xl font-bold mb-4 text-primary-dark">Contracts Guide</h3>
       <p className="mb-6 text-text-light">Learn how to interact with our smart contracts and build on top of them:</p>
 

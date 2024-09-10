@@ -17,7 +17,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="border-b-4 border-secondary-dark bg-gradient-to-r from-primary-dark to-primary text-white py-4 px-4 rounded-b-xl shadow-lg">
+    <nav className="border-b-4 border-secondary-dark bg-primary-dark text-white py-4 px-4  shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">

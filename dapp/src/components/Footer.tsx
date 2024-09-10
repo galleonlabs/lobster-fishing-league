@@ -10,7 +10,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-dark text-text py-8 rounded-t-2xl px-8 border-t-4 border-secondary-dark">
+    <footer className="bg-primary-dark text-text py-8 rounded-t-sm px-8 border-t-4 border-secondary-dark">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0 text-center md:text-left">
@@ -37,7 +37,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     title={title}
-                    className="flex items-center gap-2 px-3 py-2 bg-primary-light rounded-md hover:bg-primary transition duration-300 text-text hover:text-text-light"
+                    className="flex items-center gap-2 px-3 py-2 bg-primary-light rounded-sm hover:bg-primary transition duration-300 text-text hover:text-text-light"
                   >
                     {icon}
                     <span>{title}</span>

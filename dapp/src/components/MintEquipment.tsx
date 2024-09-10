@@ -69,14 +69,14 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
   }, [error]);
 
   return (
-    <section className="bg-white rounded-xl shadow-md p-6 mb-8">
+    <section className="bg-white rounded-sm shadow-md p-6 mb-8">
       <div className="flex items-center mb-4">
         <Image src="/fishing.png" alt="Equipment Shop" width={48} height={48} className="mr-4 p-1" />
         <h3 className="text-2xl font-bold text-primary-dark">Equipment Shop</h3>
       </div>
       <p className="mb-4 text-text-light">Gear up for your fishing adventures! Get your equipment here.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white rounded-lg p-4 border border-text">
+        <div className="bg-white rounded-sm p-4 border border-text">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Image
@@ -84,7 +84,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
                 alt="Lobster Pot"
                 width={64}
                 height={64}
-                className="mr-4 p-1 border border-text rounded-md"
+                className="mr-4 p-1 border border-text rounded-sm"
               />
               <div>
                 <h4 className="font-semibold text-lg">Lobster Pot</h4>
@@ -110,7 +110,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
               <button
                 onClick={handleMint}
                 disabled={isPending || isConfirming || !mintPrice}
-                className="w-full bg-primary-dark text-white rounded-md px-4 py-2 hover:bg-opacity-80 disabled:bg-gray-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+                className="w-full bg-primary-dark text-white rounded-sm px-4 py-2 hover:bg-opacity-80 disabled:bg-gray-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
               >
                 {isPending || isConfirming ? (
                   <span className="flex items-center justify-center">
@@ -142,23 +142,21 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
               </button>
               {errorMessage && <p className="text-red-500 mt-2">Error: {errorMessage}</p>}
               {isSuccess && (
-                <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
+                <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-sm">
                   <p className="font-semibold">Minting successful!</p>
                   <p>Your new Lobster Pot is ready for action.</p>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-text font-semibold text-center">
-              Please connect your wallet to mint equipment
-            </p>
+            <p className="text-text font-semibold text-center">Please connect your wallet to mint equipment</p>
           )}
         </div>
-        <div className="bg-white opacity-70 rounded-lg p-4 border border-text flex flex-col justify-between">
+        <div className="bg-white opacity-70 rounded-sm p-4 border border-text flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <div className="w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center mr-4 p-2 border border-text ">
+                <div className="w-16 h-16 bg-gray-200 rounded-sm flex items-center justify-center mr-4 p-2 border border-text ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-8 w-8 text-gray-400 "
@@ -184,7 +182,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
               <li>Special attributes and bonuses</li>
             </ul>
           </div>
-          <button className="w-full bg-gray-300 text-gray-600 rounded-md px-4 py-2 cursor-not-allowed" disabled>
+          <button className="w-full bg-gray-300 text-gray-600 rounded-sm px-4 py-2 cursor-not-allowed" disabled>
             Coming Soon
           </button>
         </div>
