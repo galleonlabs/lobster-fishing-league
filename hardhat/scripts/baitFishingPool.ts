@@ -31,8 +31,8 @@ async function main() {
   });
 
   // Replace these with your actual deployed contract addresses
-  const fishingSpotAddress = "0x25586b34884eb88bfd91c2cb278788c089ca7d83"; // Your deployed FishingSpot contract address
-  const commonRedLobsterTokenAddress = "0xefb30026e8a13500dd6f5273e336aafe1a9897fc"; // Your deployed CommonRedLobsterToken contract address
+  const fishingSpotAddress = "0x3411c7A63025D40863280a4790fB57308bd34550"; // Your deployed FishingSpot contract address
+  const commonRedLobsterTokenAddress = "0xbC69A9e8768746C6E9A4Cf619E0e441EF40E9ba9"; // Your deployed CommonRedLobsterToken contract address
 
   const fishingSpotAbi = fishingSpot.abi;
   const commonRedLobsterTokenAbi = commonRedLobsterToken.abi;
@@ -43,6 +43,20 @@ async function main() {
   console.log(`Baiting area with ${baitAmount} lobsters...`);
 
   try {
+    // First, we need to whitelist the FishingSpot in the CommonRedLobsterToken contract if not already done
+    const whitelistHash = await walletClient.writeContract({
+      address: commonRedLobsterTokenAddress,
+      abi: commonRedLobsterTokenAbi,
+      functionName: "whitelistPool",
+      args: [fishingSpotAddress],
+    });
+
+    await publicClient.waitForTransactionReceipt({
+      hash: whitelistHash,
+    });
+
+    console.log("FishingSpot whitelisted (or was already whitelisted)");
+
     // Now, call the baitArea function
     const baitAreaHash = await walletClient.writeContract({
       address: fishingSpotAddress,

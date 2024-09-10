@@ -17,7 +17,8 @@
     "verify-lobster-pot": "hardhat run scripts/verify-lobster-pot.ts --network base",
     "verify-fishing-spot": "hardhat run scripts/verify-fishing-spot.ts --network base",
     "deploy-env": "npx hardhat run scripts/deploy-env.ts --network base",
-    "verify-env": "npx hardhat run scripts/verify-env.ts --network base"
+    "verify-env": "npx hardhat run scripts/verify-env.ts --network base",
+    "flatten-c": "hardhat flatten contracts/FishingSpot.sol > contracts/FlattenedFishingSpot.sol"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",

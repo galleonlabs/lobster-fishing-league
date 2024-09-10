@@ -21,9 +21,9 @@ async function delay(ms: number): Promise<void> {
 }
 
 async function main() {
-  const commonRedLobsterTokenAddress = "0xefb30026e8a13500dd6f5273e336aafe1a9897fc";
-  const lobsterPotNFTAddress = "0x521a43fc26f14335077cf0250f7e517e5dd0b022";
-  const fishingSpotAddress = "0x25586b34884eb88bfd91c2cb278788c089ca7d83";
+  const commonRedLobsterTokenAddress = "0xbC69A9e8768746C6E9A4Cf619E0e441EF40E9ba9";
+  const lobsterPotNFTAddress = "0x721552FdBB7419554Db03C694f22f2a7DAeFad3C";
+  const fishingSpotAddress = "0x3411c7A63025D40863280a4790fB57308bd34550";
 
   const contracts = [
     {
