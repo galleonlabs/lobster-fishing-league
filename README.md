@@ -151,11 +151,9 @@ We welcome contributions from the community! If you'd like to contribute:
 4. Push to your branch
 5. Open a pull request
 
-Please read our [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on our code of conduct and development process.
-
 ## Security
 
-If you discover any security-related issues, please email security@lobsterfishingleague.com instead of using the issue tracker. We take all security concerns seriously.
+If you discover any security-related issues, please email gm@galleonlabs.io instead of using the issue tracker. We take all security concerns seriously.
 
 ## Connect With Us
 
