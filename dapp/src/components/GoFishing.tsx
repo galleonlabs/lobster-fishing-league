@@ -141,7 +141,7 @@ export default function GoFishing({
           ) : (
             <>
               <p className="text-text font-semibold">Please connect your wallet to start fishing</p>
-              <div className="flex justify-center mt-8">
+              <div className="flex mt-4">
                 <LoginButton />
               </div>
             </>

@@ -61,21 +61,23 @@ export default function Navbar() {
           </div>
         </div>
         {isMenuOpen && (
-          <div className="mt-4 md:hidden bg-primary-light rounded-lg p-4 shadow-inner">
-            {navItems.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                className="flex items-center space-x-2 py-2 px-4 hover:bg-primary rounded transition duration-300"
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </a>
-            ))}
-            <div className="mt-4 px-4">
+          <>
+            <div className="mt-4 md:hidden flex bg-primary-light rounded-lg p-4 shadow-inner">
+              {navItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.href}
+                  className="flex items-center space-x-2 py-2 px-4 text-text rounded transition duration-300"
+                >
+                  {item.icon}
+                  <span className="">{item.name}</span>
+                </a>
+              ))}
+            </div>
+            <div className="block pt-4">
               <LoginButton />
             </div>
-          </div>
+          </>
         )}
       </div>
     </nav>
