@@ -3,6 +3,8 @@ import WalletConnect from "./WalletConnect";
 import Image from "next/image";
 import { FaGithub, FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import WalletWrapper from "./WalletWrapper";
+import LoginButton from "./LoginButton";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,9 +31,9 @@ export default function Navbar() {
             <h1 className="text-2xl font-bold">Lobster Fishing League</h1>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <a
-                key={item.name}
+                key={index}
                 href={item.href}
                 className="flex items-center text-lg space-x-2 hover:text-secondary-light transition duration-300"
               >
@@ -39,7 +41,7 @@ export default function Navbar() {
                 <span>{item.name}</span>
               </a>
             ))}
-            <WalletConnect />
+            <LoginButton />
           </div>
           <div className="md:hidden">
             <button
@@ -60,9 +62,9 @@ export default function Navbar() {
         </div>
         {isMenuOpen && (
           <div className="mt-4 md:hidden bg-primary-light rounded-lg p-4 shadow-inner">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <a
-                key={item.name}
+                key={index}
                 href={item.href}
                 className="flex items-center space-x-2 py-2 px-4 hover:bg-primary rounded transition duration-300"
               >
@@ -71,7 +73,7 @@ export default function Navbar() {
               </a>
             ))}
             <div className="mt-4 px-4">
-              <WalletConnect />
+              <LoginButton />
             </div>
           </div>
         )}

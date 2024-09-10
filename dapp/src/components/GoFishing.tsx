@@ -2,6 +2,7 @@ import React from "react";
 import { useChainId, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { getContractAddresses, fishingSpotABI, isSupportedNetwork } from "../constants";
 import Image from "next/image";
+import LoginButton from "./LoginButton";
 
 type GoFishingProps = {
   address: `0x${string}` | undefined;
@@ -104,9 +105,7 @@ export default function GoFishing({
                     </button>
                   ) : (
                     <div className="mb-4">
-                      <p className="text-text font-semibold mb-2">
-                        Cooldown active. Please wait before fishing again.
-                      </p>
+                      <p className="text-text font-semibold mb-2">Cooldown active. Please wait before fishing again.</p>
                       <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                         <div
                           className="bg-blue-600 h-2.5 rounded-full transition-all duration-1000 ease-linear"
@@ -140,7 +139,12 @@ export default function GoFishing({
               )}
             </>
           ) : (
-            <p className="text-text font-semibold">Please connect your wallet to start fishing</p>
+            <>
+              <p className="text-text font-semibold">Please connect your wallet to start fishing</p>
+              <div className="flex justify-center mt-8">
+                <LoginButton />
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -46,6 +46,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
         abi: lobsterPotNFTABI,
         functionName: "mintEquipment",
         value: mintPrice,
+        account: address,
       });
     } catch (err) {
       console.error("Minting error:", err);
@@ -189,7 +190,7 @@ export default function MintEquipment({ address, lobsterPotBalance, onSuccess }:
         </div>
       </div>
       {lobsterPotBalance && lobsterPotBalance > BigInt(0) && (
-        <div className="mt-4 p-4 border border-text text-text rounded-md">
+        <div className="mt-4 p-4 border border-text bg-primary-light text-text rounded-md">
           <p className="font-semibold">
             You own {lobsterPotBalance.toString()} Lobster Pot{lobsterPotBalance > BigInt(1) ? "s" : ""}!
           </p>

@@ -4,15 +4,9 @@ import "./global.css";
 import "@coinbase/onchainkit/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import dynamic from "next/dynamic";
-import localFont from "next/font/local";
 
 const OnchainProviders = dynamic(() => import("src/components/OnchainProviders"), {
   ssr: false,
-});
-
-const scape = localFont({
-  src: "../../public/fonts/scape.ttf",
-  variable: "--font-scape",
 });
 
 export const viewport = {
@@ -32,7 +26,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${scape.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="flex items-center justify-center">
         <OnchainProviders>{children}</OnchainProviders>
       </body>
