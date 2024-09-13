@@ -21,7 +21,7 @@ describe("LobsterPotNFT", function () {
 
   describe("Deployment", function () {
     it("Should set the right owner", async function () {
-      const { lobsterPotNFT, owner } = await loadFixture(deployLobsterPotNFTFixture);
+      const { lobsterPotNFT, owner, publicClient } = await loadFixture(deployLobsterPotNFTFixture);
 
       expect(await lobsterPotNFT.read.owner()).to.equal(getAddress(owner.account.address));
     });

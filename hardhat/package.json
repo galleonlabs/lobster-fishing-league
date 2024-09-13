@@ -29,6 +29,7 @@
     "viem": "^2.21.3"
   },
   "dependencies": {
+    "@chainlink/contracts": "^1.2.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@openzeppelin/contracts": "^5.0.2",
     "dotenv": "^16.4.5"
