@@ -9,4 +9,5 @@ interface IWeatherReport {
 
     event WeatherUpdateRequested(uint256 requestId);
     event WeatherUpdated(uint256 requestId, WeatherCondition newWeather, uint256 expirationTime);
+    event CoordinatorUpdated(address indexed oldCoordinator, address indexed newCoordinator);
 }

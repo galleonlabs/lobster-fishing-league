@@ -8,7 +8,7 @@ import "./IEquipmentNFT.sol";
 import "./ILobsterToken.sol";
 import "./IWeatherReport.sol";
 
-contract FishingSpot is IFishingSpot, Ownable, ReentrancyGuard {
+contract FishingSpotV2 is IFishingSpotV2, Ownable, ReentrancyGuard {
     IERC721 public override equipmentNFT;
     ILobsterToken public override lobsterToken;
     uint256 public override lobsterAmount;

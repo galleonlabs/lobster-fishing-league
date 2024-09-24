@@ -16,12 +16,13 @@
     "verify-lobster-token": "hardhat run scripts/verify-common-red-lobster-token.ts --network base",
     "verify-lobster-pot": "hardhat run scripts/verify-lobster-pot.ts --network base",
     "verify-fishing-spot": "hardhat run scripts/verify-fishing-spot.ts --network base",
-    "deploy-env": "npx hardhat run scripts/deploy-env.ts --network base",
-    "verify-env": "npx hardhat run scripts/verify-env.ts --network base",
-    "flatten-c": "hardhat flatten contracts/FishingSpot.sol > contracts/FlattenedFishingSpot.sol"
+    "deploy-env": "npx hardhat run scripts/deploy-env.ts --network baseSepolia",
+    "verify-env": "npx hardhat run scripts/verify-env.ts --network baseSepolia",
+    "flatten-c": "hardhat flatten contracts/FishingSpotV2.sol > contracts/FlattenedFishingSpotV2.sol"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.10",
     "@nomicfoundation/hardhat-viem": "^2.0.4",

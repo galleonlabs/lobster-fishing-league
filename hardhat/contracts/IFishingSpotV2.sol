@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./ILobsterToken.sol";
 
-interface IFishingSpot {
+interface IFishingSpotV2 {
     function fish() external;
     function baitArea(uint256 _amount) external;
     

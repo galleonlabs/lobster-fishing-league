@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol";
-import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
+import "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
+import "@chainlink/contracts/src/v0.8/vrf/dev/interfaces/IVRFCoordinatorV2Plus.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 import "./IWeatherReport.sol";
 
-contract WeatherReport is IWeatherReport, VRFConsumerBaseV2, Ownable {
-    VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
+contract WeatherReport is VRFConsumerBaseV2Plus, IWeatherReport {
+    using VRFV2PlusClient for VRFV2PlusClient.RandomWordsRequest;
+
     uint256 private immutable i_subscriptionId;
     bytes32 private immutable i_gasLane;
     uint32 private immutable i_callbackGasLimit;
@@ -17,49 +19,78 @@ contract WeatherReport is IWeatherReport, VRFConsumerBaseV2, Ownable {
     WeatherCondition public currentWeather;
     uint256 public weatherExpirationTime;
     bool public hasActiveReport;
+    address public manager;
 
     constructor(
         address _vrfCoordinator,
-        uint256 _subscriptionId, 
+        uint256 _subscriptionId,
         bytes32 _gasLane,
-        uint32 _callbackGasLimit
-    ) VRFConsumerBaseV2(_vrfCoordinator) Ownable(msg.sender) {
-        i_vrfCoordinator = VRFCoordinatorV2Interface(_vrfCoordinator);
+        uint32 _callbackGasLimit,
+        address _manager
+    ) VRFConsumerBaseV2Plus(_vrfCoordinator) {
         i_subscriptionId = _subscriptionId;
         i_gasLane = _gasLane;
         i_callbackGasLimit = _callbackGasLimit;
         currentWeather = WeatherCondition.GOOD;
         weatherExpirationTime = type(uint256).max;
         hasActiveReport = false;
+        manager = _manager;
     }
 
-    function getCurrentWeather() external view override returns (WeatherCondition, uint256) {
+    modifier onlyManager() {
+        require(msg.sender == manager);
+        _;
+    }
+
+    function getCurrentWeather()
+        external
+        view
+        override
+        returns (WeatherCondition, uint256)
+    {
         if (!hasActiveReport || block.timestamp > weatherExpirationTime) {
             return (WeatherCondition.GOOD, type(uint256).max);
         }
         return (currentWeather, weatherExpirationTime);
     }
 
- function reportWeather() external override onlyOwner {
-        try i_vrfCoordinator.requestRandomWords(
-            i_gasLane,
-            uint64(i_subscriptionId),
-            REQUEST_CONFIRMATIONS,
-            i_callbackGasLimit,
-            NUM_WORDS
-        ) returns (uint256 requestId) {
+    function reportWeather() external override onlyManager {
+        try
+            IVRFCoordinatorV2Plus(s_vrfCoordinator).requestRandomWords(
+                VRFV2PlusClient.RandomWordsRequest({
+                    keyHash: i_gasLane,
+                    subId: i_subscriptionId,
+                    requestConfirmations: REQUEST_CONFIRMATIONS,
+                    callbackGasLimit: i_callbackGasLimit,
+                    numWords: NUM_WORDS,
+                    extraArgs: VRFV2PlusClient._argsToBytes(
+                        VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
+                    )
+                })
+            )
+        returns (uint256 requestId) {
             emit WeatherUpdateRequested(requestId);
         } catch Error(string memory reason) {
             revert(string(abi.encodePacked("VRF request failed: ", reason)));
         } catch (bytes memory lowLevelData) {
-            revert(string(abi.encodePacked("VRF request failed with raw error: ", lowLevelData)));
+            revert(
+                string(
+                    abi.encodePacked(
+                        "VRF request failed with raw error: ",
+                        lowLevelData
+                    )
+                )
+            );
         }
     }
 
-    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
-        uint256 weatherRandom = randomWords[0] % 100;
-        uint256 durationRandom = randomWords[1] % 9 + 4; // 4 to 12 hours
-        
+    function fulfillRandomWords(
+       uint256 _requestId,
+        uint256[] calldata _randomWords
+    ) internal override {
+        uint256 weatherRandom = _randomWords[0] % 100;
+        uint256 durationRandom = (_randomWords[1] % 9) + 4; // 4 to 12 hours
+
         if (weatherRandom < 20) {
             currentWeather = WeatherCondition.POOR;
         } else if (weatherRandom < 80) {
@@ -71,6 +102,8 @@ contract WeatherReport is IWeatherReport, VRFConsumerBaseV2, Ownable {
         weatherExpirationTime = block.timestamp + durationRandom * 1 hours;
         hasActiveReport = true;
 
-        emit WeatherUpdated(requestId, currentWeather, weatherExpirationTime);
+        emit WeatherUpdated(_requestId, currentWeather, weatherExpirationTime);
     }
+
+
 }
